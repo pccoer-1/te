@@ -1,0 +1,501 @@
+Perfect ✅
+We’ll now continue from **CHIT 6 → CHIT 25** (remaining 20 chits) with the same structure:
+
+> 🔹 **Explanation (line-by-line & concept)**
+> 🔹 **Oral Questions (asked in viva)**
+> 🔹 **Practical Commands (queries you may be told to execute)**
+
+---
+
+## 🧩 **CHIT 6 – PL/SQL Procedure (Student Grade)**
+
+### 🔹 1. Explanation:
+
+* `CREATE OR REPLACE PROCEDURE` defines a stored procedure.
+* Accepts parameters `(p_name, p_marks)`.
+* Checks marks range and assigns grade:
+
+  * 990–1500 → Distinction
+  * 900–989 → First Class
+  * 825–899 → Higher Second
+* Inserts result into `Result` table.
+* Called using `BEGIN proc_Grade('Student1',1000); END;`
+
+### 🔹 2. Oral Questions:
+
+* Difference between **Procedure** and **Function**.
+* How do you **call** a procedure in PL/SQL?
+* What is **parameter passing (IN, OUT, INOUT)**?
+* Why use `COMMIT` inside procedure?
+
+### 🔹 3. Practical Commands:
+
+```sql
+EXEC proc_Grade('Meera',950);
+SELECT * FROM Result;
+```
+
+---
+
+## 🧩 **CHIT 7 – PL/SQL Function**
+
+### 🔹 1. Explanation:
+
+* Function `func_Grade()` returns a grade as a string.
+* Accepts marks and returns grade type.
+* Can be called inside a query or PL/SQL block.
+* Demonstrates returning value from PL/SQL.
+
+### 🔹 2. Oral Questions:
+
+* What is a **return type** in function?
+* Difference between **Function** and **Procedure**?
+* Can we call function inside SQL query?
+* Why functions must return a value?
+
+### 🔹 3. Practical Commands:
+
+```sql
+SELECT func_Grade(920) AS Grade FROM dual;
+```
+
+or
+
+```sql
+BEGIN
+  INSERT INTO Result(Name,Class) VALUES('Ravi', func_Grade(875));
+END;
+/
+```
+
+---
+
+## 🧩 **CHIT 8 – SQL (Instructor, Student, Course, Teach)**
+
+### 🔹 1. Explanation:
+
+* Creates `student`, `instructor`, `course`, `teaches` tables.
+* Inserts records and links them.
+* Joins instructor and teaches to show courses by semester.
+* Creates a **view** of students.
+* Alters table column name (`dept_name → department_name`).
+* Deletes students where department is null.
+
+### 🔹 2. Oral Questions:
+
+* What is a **View**?
+* What is difference between **ALTER TABLE** and **UPDATE**?
+* What is **JOIN** and **ON clause**?
+
+### 🔹 3. Practical Commands:
+
+```sql
+SELECT t.course_id, t.semester FROM teaches t JOIN instructor i ON t.T_ID=i.T_ID;
+CREATE VIEW student_view AS SELECT * FROM student;
+ALTER TABLE student RENAME COLUMN dept_name TO department_name;
+```
+
+---
+
+## 🧩 **CHIT 9 – MongoDB (orderinfo)**
+
+### 🔹 1. Explanation:
+
+* Creates collection `orderinfo` with customer details.
+* Uses `$match`, `$group`, `$avg` in aggregation pipeline.
+* Finds records by range query.
+* Creates index on `cust_id` for fast search.
+
+### 🔹 2. Oral Questions:
+
+* What is `$match` and `$group` in MongoDB?
+* What is the purpose of an index?
+* Difference between `insertOne` and `insertMany`?
+
+### 🔹 3. Practical Commands:
+
+```javascript
+db.orderinfo.find();
+db.orderinfo.aggregate([{ $group: { _id: "$status", avgPrice: { $avg: "$price" } } }]);
+db.orderinfo.createIndex({ cust_id: 1 });
+```
+
+---
+
+## 🧩 **CHIT 10 – MongoDB (students)**
+
+### 🔹 1. Explanation:
+
+* Creates `students` collection and inserts student data.
+* Performs `updateOne` to change marks.
+* Deletes and inserts new record dynamically.
+
+### 🔹 2. Oral Questions:
+
+* Difference between `updateOne` and `updateMany`.
+* How do we remove a record?
+* What happens if we insert duplicate `_id`?
+
+### 🔹 3. Practical Commands:
+
+```javascript
+db.students.find();
+db.students.updateOne({ roll: 2 }, { $set: { marks: 95 } });
+db.students.deleteOne({ roll: 3 });
+```
+
+---
+
+## 🧩 **CHIT 11 – MySQL Trigger (Before Update)**
+
+### 🔹 1. Explanation:
+
+* Creates `Library` and `Library_Audit` tables.
+* Defines **BEFORE UPDATE trigger**.
+* Every time record updates, it logs old data into audit table.
+
+### 🔹 2. Oral Questions:
+
+* What is a **Trigger**?
+* Difference between **BEFORE** and **AFTER** triggers?
+* When do triggers execute automatically?
+
+### 🔹 3. Practical Commands:
+
+```sql
+UPDATE Library SET author='NewAuthor' WHERE id=1;
+SELECT * FROM Library_Audit;
+```
+
+---
+
+## 🧩 **CHIT 12 – MySQL Trigger (After Delete)**
+
+### 🔹 1. Explanation:
+
+* Trigger executes after deletion of a record.
+* Stores deleted record into `Library_Audit`.
+
+### 🔹 2. Oral Questions:
+
+* What is the use of `OLD` in trigger?
+* What does `AFTER DELETE` mean?
+* Can we create multiple triggers on one table?
+
+### 🔹 3. Practical Commands:
+
+```sql
+DELETE FROM Library WHERE id=1;
+SELECT * FROM Library_Audit;
+```
+
+---
+
+## 🧩 **CHIT 13 – MongoDB (movies)**
+
+### 🔹 1. Explanation:
+
+* Inserts documents with embedded field `producer`.
+* Queries by nested field: `"producer.address"`.
+* Updates type from “Action” to “Thriller”.
+
+### 🔹 2. Oral Questions:
+
+* What is an **embedded document**?
+* How do we access nested fields?
+* What does `$set` operator do?
+
+### 🔹 3. Practical Commands:
+
+```javascript
+db.movies.find({ "producer.address": "PUNE" });
+db.movies.updateMany({ type: "Action" }, { $set: { type: "Thriller" } });
+```
+
+---
+
+## 🧩 **CHIT 14 – MongoDB (School Database)**
+
+### 🔹 1. Explanation:
+
+* Creates multiple collections: teachers, department, students.
+* Performs `$or`, `$gte`, `$set`, `$deleteMany`, and indexing.
+
+### 🔹 2. Oral Questions:
+
+* What is `$or` query?
+* What is the difference between `find()` and `findOne()`?
+* Why is indexing important?
+
+### 🔹 3. Practical Commands:
+
+```javascript
+db.teachers.find({ Salary: { $gte: 10000 } });
+db.students.updateOne({ Roll_No: 3 }, { $set: { Class: "TE" } });
+```
+
+---
+
+## 🧩 **CHIT 15 – MongoDB (Students Collection)**
+
+### 🔹 1. Explanation:
+
+* Demonstrates CRUD operations, sorting, regex search, limit, and projection.
+* Uses embedded documents (`Address`) and arrays (`Hobbies`).
+
+### 🔹 2. Oral Questions:
+
+* What is projection in MongoDB?
+* What does `{ StudentName: 1, _id: 0 }` mean?
+* Difference between `$regex` and `$text` search?
+
+### 🔹 3. Practical Commands:
+
+```javascript
+db.students.find().sort({ StudentName: 1 });
+db.students.find({ StudentName: { $regex: "^A" } });
+db.students.countDocuments();
+```
+
+---
+
+## 🧩 **CHIT 16 – MongoDB (Teacher Aggregation)**
+
+### 🔹 1. Explanation:
+
+* Uses `$group` with `$avg`, `$min`, `$count`.
+* Shows aggregate functions similar to SQL `GROUP BY`.
+
+### 🔹 2. Oral Questions:
+
+* How does `$group` work in aggregation?
+* Difference between `$sum` and `$count`?
+* Can we group by multiple fields?
+
+### 🔹 3. Practical Commands:
+
+```javascript
+db.teacher.aggregate([{ $group: { _id: "$department", avgSalary: { $avg: "$salary" } } }]);
+```
+
+---
+
+## 🧩 **CHIT 17 – MySQL (Employee Project)**
+
+### 🔹 1. Explanation:
+
+* Demonstrates DDL, DML, joins, group by, having, and subqueries.
+* Basic SQL practical of employee and project.
+
+### 🔹 2. Oral Questions:
+
+* Difference between `DELETE` and `TRUNCATE`?
+* How does `GROUP BY` differ from `ORDER BY`?
+* What is `HAVING` used for?
+
+### 🔹 3. Practical Commands:
+
+```sql
+SELECT City,COUNT(*) FROM Employee GROUP BY City;
+SELECT City,MAX(Salary) FROM Employee GROUP BY City HAVING MAX(Salary)>26000;
+```
+
+---
+
+## 🧩 **CHIT 18 – MongoDB (MapReduce City)**
+
+### 🔹 1. Explanation:
+
+* Demonstrates `mapReduce()` for population aggregation by state, city, type.
+* Emits key-value pairs, reduces by summing population.
+
+### 🔹 2. Oral Questions:
+
+* What is **MapReduce** in MongoDB?
+* How does `$group` differ from MapReduce?
+* Why use MapReduce?
+
+### 🔹 3. Practical Commands:
+
+```javascript
+db.city.mapReduce(mapState, reduceSum, { out: "statePopulation" });
+db.statePopulation.find();
+```
+
+---
+
+## 🧩 **CHIT 19 – MySQL (Employee Table with Index & View)**
+
+### 🔹 1. Explanation:
+
+* Creates table `emp` with default address.
+* Creates an index for faster search.
+* Creates a view showing selected columns.
+
+### 🔹 2. Oral Questions:
+
+* What is a **view**?
+* What is **indexing**?
+* What is the use of default constraint?
+
+### 🔹 3. Practical Commands:
+
+```sql
+SELECT * FROM emp;
+SHOW INDEX FROM emp;
+SELECT * FROM emp_view;
+```
+
+---
+
+## 🧩 **CHIT 20 – MongoDB (Student Indexing & Aggregation)**
+
+### 🔹 1. Explanation:
+
+* Demonstrates compound and simple indexing.
+* Aggregates using `$max`, `$avg`, `$sum`.
+* `$group` behaves like SQL group by.
+
+### 🔹 2. Oral Questions:
+
+* What is a compound index?
+* Difference between `$max` and `$first`?
+* How to check created indexes?
+
+### 🔹 3. Practical Commands:
+
+```javascript
+db.students.getIndexes();
+db.students.aggregate([{ $group: { _id: "$subject", avgMarks: { $avg: "$marks" } } }]);
+```
+
+---
+
+## 🧩 **CHIT 21 – MongoDB (Update & Aggregate)**
+
+### 🔹 1. Explanation:
+
+* Inserts order info.
+* Updates all docs with new field.
+* Creates multi-field index.
+* Aggregates by average price.
+
+### 🔹 2. Oral Questions:
+
+* What is `$set` operator?
+* Difference between unique and non-unique index?
+* How to delete an index?
+
+### 🔹 3. Practical Commands:
+
+```javascript
+db.orderinfo.aggregate([{ $group: { _id: "$status", avgPrice: { $avg: "$price" } } }]);
+db.orderinfo.createIndex({ cust_id: 1, status: 1 });
+```
+
+---
+
+## 🧩 **CHIT 22 – MongoDB (Update and Query)**
+
+### 🔹 1. Explanation:
+
+* Demonstrates conditional updates and `$inc` operator.
+* Uses `$or` query and range filtering.
+
+### 🔹 2. Oral Questions:
+
+* What does `$inc` do?
+* How do we combine multiple conditions?
+* What is `$or` query?
+
+### 🔹 3. Practical Commands:
+
+```javascript
+db.orderinfo.find({ price: { $gte: 250, $lte: 450 } });
+db.orderinfo.updateOne({ cust_id: 123 }, { $inc: { price: 10 } });
+```
+
+---
+
+## 🧩 **CHIT 23 – JDBC (Java + MySQL)**
+
+### 🔹 1. Explanation:
+
+* Java code connecting to MySQL using JDBC.
+* Performs `CREATE`, `INSERT`, `SELECT`, `UPDATE`, `DELETE`.
+* Uses `PreparedStatement` for secure query.
+
+### 🔹 2. Oral Questions:
+
+* What is JDBC driver?
+* Difference between `Statement` and `PreparedStatement`?
+* Why we use `executeQuery` vs `executeUpdate`?
+
+### 🔹 3. Practical Commands (in MySQL):
+
+```sql
+SELECT * FROM Employee;
+UPDATE Employee SET state='TN' WHERE state='MH';
+```
+
+---
+
+## 🧩 **CHIT 24 – MySQL (Employee–Company–Manager Relationship)**
+
+### 🔹 1. Explanation:
+
+* Multiple table relationships.
+* Joins across `Emp`, `Company`, `Works`.
+* Uses subqueries, delete, and case update.
+
+### 🔹 2. Oral Questions:
+
+* What is **JOIN condition**?
+* What does `CASE` statement do?
+* Difference between `INNER JOIN` and `CROSS JOIN`?
+
+### 🔹 3. Practical Commands:
+
+```sql
+SELECT e.ename FROM Emp e JOIN Works w ON e.emp_id=w.emp_id JOIN Company c ON w.c_id=c.c_id WHERE c.cname='Bosch';
+DELETE FROM Works WHERE cname='SBC' AND sal>50000;
+```
+
+---
+
+## 🧩 **CHIT 25 – MySQL (Duty Allocation & Views)**
+
+### 🔹 1. Explanation:
+
+* Three tables: `Empl`, `Position`, `Duty_alloc`.
+* Uses foreign keys, view, and group by.
+* Shows employees by post and calculates salary stats.
+
+### 🔹 2. Oral Questions:
+
+* What is **View** and why used?
+* What does `GROUP BY` do?
+* How to count distinct values?
+
+### 🔹 3. Practical Commands:
+
+```sql
+SELECT * FROM Duty_alloc WHERE e_no=123;
+SELECT post,AVG(pay_rate) FROM Empl GROUP BY post;
+SELECT shift,COUNT(DISTINCT e_no) FROM Duty_alloc GROUP BY shift;
+```
+
+---
+
+✅ **Summary of Preparation Strategy**
+
+| Focus   | What to Revise                                     |
+| ------- | -------------------------------------------------- |
+| SQL     | Joins, Subqueries, Aggregate, View, Index          |
+| PL/SQL  | Procedure, Function, Cursor, Trigger               |
+| MongoDB | insertMany, updateOne, aggregate, mapReduce, index |
+| Oral    | Purpose, difference, and use cases of each command |
+
+---
+
+Would you like me to generate a **PDF or printable table version** of this (with all explanations, questions, and execution commands) for your **exam revision notes**?

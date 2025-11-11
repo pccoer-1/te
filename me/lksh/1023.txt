@@ -1,0 +1,256 @@
+
+---
+
+## 🧩 **CHIT 10 – Java + MongoDB Connectivity**
+
+### ✅ **Final Code (MongoExample.java)**
+
+```java
+import com.mongodb.client.*;
+import org.bson.Document;
+
+public class MongoExample {
+    public static void main(String[] args) {
+        // 1. Connect to MongoDB
+        MongoClient mongo = MongoClients.create("mongodb://localhost:27017");
+        System.out.println("✅ Connected to MongoDB");
+
+        // 2. Create Database
+        MongoDatabase db = mongo.getDatabase("Institute");
+        System.out.println("✅ Database Created: " + db.getName());
+
+        // 3. Create Collection
+        db.createCollection("Students");
+        MongoCollection<Document> col = db.getCollection("Students");
+        System.out.println("✅ Collection Created");
+
+        // 4. Insert Document
+        Document doc = new Document("RollNo", 1)
+                .append("Name", "Riya")
+                .append("Course", "BCA")
+                .append("City", "Pune");
+        col.insertOne(doc);
+        System.out.println("✅ Document Inserted");
+
+        // 5. Display Data
+        for (Document d : col.find()) {
+            System.out.println("📄 " + d.toJson());
+        }
+
+        // 6. Update Document
+        col.updateOne(new Document("Name", "Riya"),
+                new Document("$set", new Document("City", "Mumbai")));
+        System.out.println("✅ Document Updated");
+
+        // 7. Delete Document
+        col.deleteOne(new Document("Name", "Riya"));
+        System.out.println("✅ Document Deleted");
+
+        mongo.close();
+        System.out.println("✅ MongoDB Connection Closed");
+    }
+}
+```
+
+---
+
+### 💻 **Steps to Run on Ubuntu**
+
+1. **Install Java & MongoDB driver**
+
+```bash
+sudo apt update
+sudo apt install openjdk-17-jdk -y
+```
+
+2. **Download MongoDB Java Driver**
+
+```bash
+mkdir ~/mongo-java
+cd ~/mongo-java
+wget https://repo1.maven.org/maven2/org/mongodb/mongodb-driver-sync/4.11.1/mongodb-driver-sync-4.11.1.jar
+```
+
+3. **Save the code as:**
+
+```bash
+nano MongoExample.java
+```
+
+(paste the above code and save)
+
+4. **Compile and Run**
+
+```bash
+javac -cp mongodb-driver-sync-4.11.1.jar:. MongoExample.java
+java -cp mongodb-driver-sync-4.11.1.jar:. MongoExample
+```
+
+---
+
+### 🧠 **Expected Output**
+
+```
+✅ Connected to MongoDB
+✅ Database Created: Institute
+✅ Collection Created
+✅ Document Inserted
+📄 {"_id": ObjectId("..."), "RollNo": 1, "Name": "Riya", "Course": "BCA", "City": "Pune"}
+✅ Document Updated
+✅ Document Deleted
+✅ MongoDB Connection Closed
+```
+
+---
+
+### 🗣 **Oral Questions**
+
+* What class is used to connect MongoDB in Java? → `MongoClient`
+* What is `MongoCollection`?
+* What method inserts a document? → `insertOne()`
+* What does `$set` do?
+* How can we update multiple documents?
+
+---
+
+## 🧩 **CHIT 23 – Java + MySQL (JDBC Connectivity)**
+
+### ✅ **SQL Table Setup (Run in MySQL before Java code)**
+
+```sql
+CREATE DATABASE yourDB;
+USE yourDB;
+CREATE TABLE Employee (
+  SSN INT PRIMARY KEY,
+  Ename VARCHAR(50) NOT NULL,
+  state VARCHAR(50),
+  salary DECIMAL(10,2)
+);
+INSERT INTO Employee VALUES
+(101,'Ravi','MH',25000),
+(102,'Meena','TN',30000),
+(103,'Suresh','Gujrat',22000);
+```
+
+---
+
+### ✅ **Java Code (EmployeeDB.java)**
+
+```java
+import java.sql.*;
+
+public class EmployeeDB {
+    public static void main(String[] args) {
+        try {
+            // 1. Load MySQL JDBC Driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // 2. Connect to Database
+            Connection con = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/yourDB", "root", "password");
+
+            Statement stmt = con.createStatement();
+
+            // 3. Insert Record
+            stmt.executeUpdate("INSERT INTO Employee VALUES (104, 'Anusha', 'MH', 28000)");
+
+            // 4. Retrieve Employee Details by SSN
+            ResultSet rs = stmt.executeQuery("SELECT * FROM Employee WHERE SSN = 104");
+            while (rs.next()) {
+                System.out.println("SSN: " + rs.getInt("SSN") +
+                                   ", Name: " + rs.getString("Ename") +
+                                   ", State: " + rs.getString("state") +
+                                   ", Salary: " + rs.getDouble("salary"));
+            }
+
+            // 5. Update Employee State
+            stmt.executeUpdate("UPDATE Employee SET state='TN' WHERE state='MH'");
+
+            // 6. Delete Employees from 'Gujrat'
+            stmt.executeUpdate("DELETE FROM Employee WHERE state='Gujrat'");
+
+            con.close();
+            System.out.println("✅ All operations completed successfully.");
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+    }
+}
+```
+
+---
+
+### 💻 **Steps to Run on Ubuntu**
+
+1. **Install MySQL & JDBC driver**
+
+```bash
+sudo apt install mysql-server -y
+sudo systemctl start mysql
+sudo mysql_secure_installation
+sudo apt install libmysql-java -y
+```
+
+2. **Save file**
+
+```bash
+nano EmployeeDB.java
+```
+
+3. **Compile & Run**
+
+```bash
+javac -cp /usr/share/java/mysql-connector-j.jar:. EmployeeDB.java
+java -cp /usr/share/java/mysql-connector-j.jar:. EmployeeDB
+```
+
+---
+
+### 🧠 **Expected Output**
+
+```
+SSN: 104, Name: Anusha, State: MH, Salary: 28000.0
+✅ All operations completed successfully.
+```
+
+Then, if you check in MySQL:
+
+```sql
+SELECT * FROM Employee;
+```
+
+You’ll see:
+
+| SSN | Ename  | State | Salary |
+| --- | ------ | ----- | ------ |
+| 101 | Ravi   | TN    | 25000  |
+| 102 | Meena  | TN    | 30000  |
+| 104 | Anusha | TN    | 28000  |
+
+(Notice: `MH` → updated to `TN`, `Gujrat` row deleted)
+
+---
+
+### 🗣 **Oral Questions**
+
+* What is JDBC and why is it used?
+* Difference between **Statement** and **PreparedStatement**?
+* What is **ResultSet** used for?
+* Why use `Class.forName()`?
+* What is the default MySQL port?
+
+---
+
+## 🧾 **Summary Comparison**
+
+| Feature          | MongoDB (Chit 10)                     | MySQL (Chit 23)                 |
+| ---------------- | ------------------------------------- | ------------------------------- |
+| Connection class | `MongoClients.create()`               | `DriverManager.getConnection()` |
+| Database type    | NoSQL                                 | Relational                      |
+| CRUD style       | `insertOne`, `updateOne`, `deleteOne` | `INSERT`, `UPDATE`, `DELETE`    |
+| Driver           | `mongodb-driver-sync.jar`             | `mysql-connector-j.jar`         |
+| Output           | JSON Documents                        | Table Rows                      |
+
+---
+
+Would you like me to show **the output screenshots (terminal + database)** layout, so you can visualize what to expect in your viva/practical exam?

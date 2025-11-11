@@ -1,0 +1,338 @@
+Oral Questions and Answers (DBMS LAB) 
+Questions & Answers- DBMS 
+https://career.guru99.com/top-50-database-interview-questions/ 
+1)  Define Database. 
+A prearranged collection of figures known as data is called database. 
+2)  What is DBMS? 
+Database Management Systems (DBMS) are applications designed especially which enable user 
+interaction with other applications. 
+3) What are the various kinds of interactions catered by DBMS? 
+The various kind of interactions catered by DBMS are: 
+ Data definition 
+ Update 
+ Retrieval 
+ Administration 
+4)  Segregate database technology’s development. 
+The development of database technology is divided into: 
+ Structure or data model 
+ Navigational model 
+ SQL/ relational model 
+5)  Who proposed the relational model? 
+Edgar F. Codd proposed the relational model in 1970. 
+6)  What are the features of Database language? 
+A database language may also incorporate features like: 
+DBMS-specific Configuration and management of storage engine 
+Computations to modification of query results by computations, like summing, counting, 
+averaging, grouping, sorting and cross-referencing Constraint enforcement Application 
+Programming Interface 
+7)  What do database languages do? 
+As special-purpose languages, they have: 
+ Data definition language 
+ Data manipulation language 
+ Query language 
+8)  Define database model. 
+A data model determining fundamentally how data can be stored, manipulated and organised and 
+the structure of the database logically is called database model. 
+9)  What is SQL? 
+Oral Questions and Answers (DBMS LAB) 
+Structured Query Language (SQL) being ANSI standard language updates database and commands 
+for accessing. 
+10)   Enlist the various relationships of database. 
+The various relationships of database are: 
+ One-to-one: Single table having drawn relationship with another table having similar kind 
+of columns. 
+ One-to-many: Two tables having primary and foreign key relation. 
+ Many-to-many: Junction table having many tables related to many tables. 
+11)  Define Normalization. 
+Organized data void of inconsistent dependency and redundancy within a database is called 
+normalization. 
+12)  Enlist the advantages of normalizing database. 
+Advantages of normalizing database are: 
+ No duplicate entries 
+ Saves storage space 
+ Boasts the query performances. 
+13)  Define Denormalization. 
+Boosting up database performance, adding of redundant data which in turn helps rid of complex 
+data is called denormalization. 
+14)  Define DDL and DML. 
+Managing properties and attributes of database is called Data Definition Language(DDL). 
+Manipulating data in a database such as inserting, updating, deleting is defined as Data 
+Manipulation Language. (DML) 
+15)  Enlist some commands of DDL. 
+They are: 
+CREATE: 
+Create is used in the CREATE TABLE statement. Syntax is: 
+CREATE TABLE [column name] ( [column definitions] ) [ table parameters] 
+ALTER: 
+It helps in modification of an existing object of database. Its syntax is: 
+Oral Questions and Answers (DBMS LAB) 
+ALTER objecttype objectname parameters. 
+DROP: 
+It destroys an existing database, index, table or view. Its syntax is: 
+DROP objecttype objectname. 
+16)  Define Union All operator and Union. 
+Full recordings of two tables is Union All operator. 
+A distinct recording of two tables is Union. 
+17)  Define cursor. 
+A database object which helps in manipulating data row by row representing a result set is called 
+cursor. 
+18)  Enlist the cursor types. 
+They are: 
+ Dynamic: it reflects changes while scrolling. 
+ Static: doesn’t reflect changes while scrolling and works on recording of snapshot. 
+ Keyset: data modification without reflection of new data is seen. 
+19)  Enlist the types of cursor. 
+They types of cursor are: 
+ Implicit cursor: Declared automatically as soon as the execution of SQL takes place without 
+the awareness of the user. 
+ Explicit cursor: Defined by PL/ SQL which handles query in more than one row. 
+20)  Define sub-query. 
+A query contained by a query is called Sub-query. 
+21)  Why is group-clause used? 
+Group-clause uses aggregate values to be derived by collecting similar data. 
+22)  Compare Non-clustered and clustered index 
+Both having B-tree structure, non-clustered index has data pointers enabling one table many non
+clustered indexes while clustered index is distinct for every table. 
+23)  Define Aggregate functions. 
+Functions which operate against a collection of values and returning single value is called 
+aggregate functions 
+Oral Questions and Answers (DBMS LAB) 
+24)  Define Scalar functions. 
+Scalar function is depended on the argument given and returns sole value. 
+25)  What restrictions can you apply when you are creating views? 
+Restrictions that are applied are: 
+ Only the current database can have views. 
+ You are not liable to change any computed value in any particular view. 
+ Integrity constants decide the functionality of INSERT and DELETE. 
+ Full-text index definitions cannot be applied. 
+ Temporary views cannot be created. 
+ Temporary tables cannot contain views. 
+ No association with DEFAULT definitions. 
+ Triggers such as INSTEAD OF is associated with views. 
+26)   Define “correlated subqueries”. 
+A ‘correlated subquery’ is a sort of sub query but correlated subquery is reliant on another query 
+for a value that is returned. In case of execution, the sub query is executed first and then the 
+correlated query. 
+27)   Define Data Warehousing. 
+Storage and access of data from the central location in order to take some strategic decision is 
+called Data Warehousing. Enterprise management is used for managing the information whose 
+framework is known as Data Warehousing. 
+28)  Define Join and enlist its types. 
+Joins help in explaining the relation between different tables. They also enable you to select data 
+with relation to data in another table. 
+The various types are: 
+ INNER JOINs: Blank rows are left in the middle while more than equal to two tables are 
+joined. 
+ OUTER JOINs: Divided into Left Outer Join and Right Outer Join. Blank rows are left at the 
+specified side by joining tables in other side. 
+Other joins are CROSS JOINs, NATURAL JOINs, EQUI JOIN and NON-EQUI JOIN. 
+29)  What do you mean by Index hunting? 
+Indexes help in improving the speed as well as the query performance of database. The procedure 
+of boosting the collection of indexes is named as Index hunting. 
+Oral Questions and Answers (DBMS LAB) 
+Questions & Answers- MySQL 
+https://career.guru99.com/top-50-mysql-interview-questions-answers/ 
+https://www.javatpoint.com/mysql-interview-questions 
+1. What is MySQL?  
+MySQL is an open source DBMS which is built, supported and distributed by MySQL AB (now 
+acquired by Oracle) 
+2. What are the technical features of MySQL?  
+MySQL database software is a client or server system which includes 
+ Multithreaded SQL server supporting various client programs and libraries 
+ Different backend 
+ Wide range of application programming interfaces and 
+ Administrative tools. 
+3. Why MySQL is used? 
+MySQL database server is reliable, fast and very easy to use.  This software can be downloaded as 
+freeware and can be downloaded from the internet. 
+4. What are Heap tables? 
+HEAP tables are present in memory and they are used for high speed storage on temporary 
+basis. 
+• BLOB or TEXT fields are not allowed 
+• Only comparison operators can be used =, <,>, = >,=< 
+• AUTO_INCREMENT is not supported by HEAP tables 
+• Indexes should be NOT NULL 
+5. What is the default port for MySQL Server? 
+The default port for MySQL server is 3306. 
+6.  What are the advantages of MySQL when compared with Oracle?  
+ MySQL is open source software which is available at any time and has no cost involved. 
+ MySQL is portable 
+ GUI with command prompt. 
+ Administration is supported using MySQL Query Browser 
+Oral Questions and Answers (DBMS LAB) 
+7. Difference between CHAR and VARCHAR?  
+Following are the differences between CHAR and VARCHAR: 
+ CHAR and VARCHAR types differ in storage and retrieval 
+ CHAR column length is fixed to the length that is declared while creating table. The length 
+value ranges from 1 and 255 
+ When CHAR values are stored then they are right padded using spaces to specific length. 
+Trailing spaces are removed when CHAR values are retrieved. 
+8. Give string types available for column? 
+The string types are: 
+ SET 
+ BLOB 
+ ENUM 
+ CHAR 
+ TEXT 
+ VARCHAR 
+9. How to get current MySQL version 
+SELECT VERSION (); 
+10. What are the drivers in MySQL? 
+ PHP Driver 
+ JDBC Driver 
+ ODBC Driver 
+ C WRAPPER 
+ PYTHON Driver 
+ PERL Driver 
+ RUBY Driver 
+ CAP11PHP Driver 
+ Ado.net5.mxj 
+11. What does a TIMESTAMP do on UPDATE CURRENT_TIMESTAMP data type? 
+TIMESTAMP column is updated with Zero when the table is created.  UPDATE 
+CURRENT_TIMESTAMP modifier updates the timestamp field to  current time whenever there is a 
+change in other fields of the table. 
+12. What is the difference between primary key and candidate key? 
+Every row of a table is identified uniquely by primary key. There is only one primary key for a 
+table. 
+Primary Key is also a candidate key. By common convention, candidate key can be designated as 
+primary and which can be used for any foreign key references. 
+13. What, if a table has one column defined as TIMESTAMP? 
+Timestamp field gets the current timestamp whenever the row gets altered. 
+Oral Questions and Answers (DBMS LAB) 
+14. What happens when the column is set to AUTO INCREMENT and if you reach maximum 
+value in the table? 
+It stops incrementing. Any further inserts are going to produce an error, since the key has been 
+used already. 
+15. How can we find out which auto increment was assigned on Last insert? 
+LAST_INSERT_ID will return the last value assigned by Auto_increment and it is not required to 
+specify the table name. 
+16. How can you see all indexes defined for a table? 
+Indexes are defined for the table by: 
+SHOW INDEX FROM <tablename>; 
+17. What do you mean by % and _ in the LIKE statement? 
+% corresponds to 0 or more characters, _ is exactly one character in the LIKE statement. 
+18. What is the difference between NOW() and CURRENT_DATE()? 
+NOW() command is used to show current year, month, date with hours, minutes and seconds 
+while CURRENT_DATE() shows the current year with month and date only. 
+19. What is a trigger in MySQL? 
+A trigger is a set of codes that executes in response to some events. 
+20. How many Triggers are possible in MySQL? 
+There are six Triggers allowed to use in MySQL database. 
+1. Before Insert 
+2. After Insert 
+3. Before Update 
+4. After Update 
+5. Before Delete 
+6. After Delete 
+21. What is the difference between TRUNCATE and DELETE in MySQL?    
+The DELETE command is used to delete data from a table. It only deletes the rows of data from 
+the table while, truncate is very dangerous command and should be used carefully because it 
+deletes every row permanently from a table. 
+Oral Questions and Answers (DBMS LAB) 
+Questions & Answers- NoSQL   
+https://intellipaat.com/interview-question/no-sql-interview-questions/ 
+1. Compare NoSQL & RDBMS 
+Criteria 
+NoSQL 
+RDBMS 
+Data format 
+Does not follow any order 
+Scalability 
+Organized and structured 
+Very Good 
+Average 
+Querying 
+Limited as no Join Clause 
+Using SQL 
+Storage 
+mechanism 
+Key-Value Pair, document, column 
+storage, etc. 
+Data & relationship stored in 
+different tables 
+2. What is NoSQL? 
+NoSQL encompasses a wide variety of different database technologies that were developed in 
+response to a rise in the volume of data stored about users, objects and products. The frequency in 
+which this data is accessed, and performance and processing needs. Relational databases, on the 
+other hand, were not designed to cope with the scale and agility challenges that face modern 
+applications, nor were they built to take advantage of the cheap storage and processing power 
+available today. 
+3. What are the features of NoSQL? 
+When compared to relational databases, NoSQL databases are more scalable and provide superior 
+performance, and their data model addresses several issues that the relational model is not 
+designed to address: 
+ Large volumes of structured, semi-structured, and unstructured data 
+ Agile sprints, quick iteration, and frequent code pushes 
+ Object-oriented programming that is easy to use and flexible 
+ Efficient, scale-out architecture instead of expensive, monolithic architecture 
+Questions & Answers-   MongoDB 
+http://www.guru99.com/mongodb-interview-questions.html 
+1) Explain what is MongoDB?  
+Mongo-DB is a document database which provides high performance, high availability and easy 
+scalability.  
+2) What is “Namespace” in MongoDB?  
+MongoDB stores BSON (Binary Interchange and Structure Object Notation) objects in the 
+collection. The concatenation of the collection name and database name is called a namespace.  
+Oral Questions and Answers (DBMS LAB) 
+3) What is sharding in MongoDB? 
+The procedure of storing data records across multiple machines is referred as Sharding. It is a 
+MongoDB approach to meet the demands of data growth. It is the horizontal partition of data in a 
+database or search engine. Each partition is referred as shard or database shard.  
+4) How can you see the connection used by Mongos? 
+To see the connection used by Mongos use db_adminCommand (“connPoolStats”);  
+5) Explain what is a replica set?  
+A replica set is a group of mongo instances that host the same data set. In replica set, one node is 
+primary, and another is secondary. From primary to the secondary node all data replicates.  
+6) How replication works in MongoDB? 
+Across multiple servers, the process of synchronizing data is known as replication. It provides 
+redundancy and increase data availability with multiple copies of data on different database 
+server. Replication helps in protecting the database from the loss of a single server.  
+7) While creating Schema in MongoDB what are the points need to be taken in 
+consideration?  
+Points need to be taken in consideration are  
+ Design your schema according to user requirements 
+ Combine objects into one document if you use them together. Otherwise, separate them 
+ Do joins while write, and not when it is on read 
+ For most frequent use cases optimize your schema 
+ Do complex aggregation in the schema 
+8) What is the syntax to create a collection and to drop a collection in MongoDB? 
+ Syntax to create collection in MongoDB is db.createCollection(name,options) 
+ Syntax to drop collection in MongoDB is db.collection.drop() 
+9) Explain what is the role of profiler in MongoDB? 
+MongoDB database profiler shows performance characteristics of each operation against the 
+database. You can find queries using the profiler that are slower than they should be.  
+10) Explain can you move old files in the moveChunk directory?  
+Yes, it is possible to move old files in the moveChunk directory, during normal shard balancing 
+operations these files are made as backups and can be deleted once the operations are done.  
+11) To do safe backups what is the feature in MongoDB that you can use? 
+Journaling is the feature in MongoDB that you can use to do safe backups.  
+Oral Questions and Answers (DBMS LAB) 
+12) Mention what is Objecld composed of?  
+Objectld is composed of  
+ Timestamp 
+ Client machine ID 
+ Client process ID 
+ 3 byte incremented counter 
+13) Mention what is the command syntax for inserting a document?  
+For inserting a document command syntax is database.collection.insert (document).  
+14) Mention how you can inspect the source code of a function?  
+To inspect a source code of a function, without any parentheses, the function must be invoked.  
+15) What is the command syntax that tells you whether you are on the master server or 
+not? And how many master does MongoDB allow? 
+Command syntax Db.isMaster() will tell you whether you are on the master server or not. 
+MongoDB allows only one master server, while couchDB allows multiple masters.  
+16) Mention the command syntax that is used to view Mongo is using the link?  
+The command syntax that is used to view mongo is using the link is 
+db._adminCommand(“connPoolStats.”)  
+17) Explain what are indexes in MongoDB?  
+Indexes are special structures in MongoDB, which stores a small portion of the data set in an easy 
+to traverse form. Ordered by the value of the field specified in the index, the index stores the value 
+of a specific field or set of fields.  
+18) Mention what is the basic syntax to use index in MongoDB? 
+The basic syntax to use in MongoDB is >db.COLLECTION_NAME.ensureIndex ( {KEY:1} ). In here 
+the key is the the name of the COLUMN (or KEY:VALUE pair) which is present in the documents.  
+19) Explain what is GridFS in MongoDB?  
+For storing and retrieving large files such as images, video files and audio files GridFS is used. By 
+default, it uses two files fs.files and fs.chunks to store the file’s metadata and the chunks.  
+20) What are alternatives to MongoDB?  
+Cassandra, CouchDB, Redis, Riak, Hbase are a few good alternatives.  

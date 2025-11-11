@@ -1,0 +1,394 @@
+Perfect 🔥 Yash — this is the **ultimate practical preparation pack** you need for your **DBMS external exam**.
+Below is a **complete 3-in-1 guide** —
+
+---
+
+# 🎯 PART 1 — 100+ ORAL QUESTIONS & 1-LINE ANSWERS
+
+(Covers SQL, PL/SQL, and MongoDB viva questions)
+
+---
+
+## 🧠 **A. SQL Viva Questions (40+)**
+
+| No | Question                                | 1-Line Answer                                                    |
+| -- | --------------------------------------- | ---------------------------------------------------------------- |
+| 1  | What is SQL?                            | Structured Query Language for managing relational databases.     |
+| 2  | What is a Database?                     | A structured collection of interrelated data.                    |
+| 3  | What is a Table?                        | A collection of rows and columns that stores data.               |
+| 4  | What is a Primary Key?                  | A unique identifier for each record in a table.                  |
+| 5  | What is a Foreign Key?                  | A key linking one table’s column to another table’s primary key. |
+| 6  | What is a Candidate Key?                | All columns that can qualify as a primary key.                   |
+| 7  | What is a Composite Key?                | A key formed by combining multiple columns.                      |
+| 8  | What is a Unique Key?                   | Ensures all values in a column are distinct.                     |
+| 9  | What is a Null Value?                   | A missing or unknown value in a table.                           |
+| 10 | Difference between DELETE and TRUNCATE? | DELETE removes selected rows; TRUNCATE removes all rows.         |
+| 11 | Difference between DROP and DELETE?     | DROP deletes table structure; DELETE only removes data.          |
+| 12 | What is DDL?                            | Data Definition Language (CREATE, ALTER, DROP).                  |
+| 13 | What is DML?                            | Data Manipulation Language (INSERT, UPDATE, DELETE).             |
+| 14 | What is DCL?                            | Data Control Language (GRANT, REVOKE).                           |
+| 15 | What is TCL?                            | Transaction Control Language (COMMIT, ROLLBACK).                 |
+| 16 | What is a View?                         | A virtual table based on a query result.                         |
+| 17 | What is an Index?                       | A database object that speeds up data retrieval.                 |
+| 18 | What is a Constraint?                   | A rule to maintain data integrity (PK, FK, CHECK, etc.).         |
+| 19 | What is Normalization?                  | Process of organizing data to reduce redundancy.                 |
+| 20 | What is Denormalization?                | Adding redundancy to improve performance.                        |
+| 21 | What is a Subquery?                     | A query inside another query.                                    |
+| 22 | What is a Join?                         | Combines rows from two or more tables.                           |
+| 23 | Types of Joins?                         | INNER, LEFT, RIGHT, FULL, CROSS.                                 |
+| 24 | What is GROUP BY used for?              | Group records by column(s) for aggregate functions.              |
+| 25 | What is HAVING used for?                | Filters grouped data after aggregation.                          |
+| 26 | What is ORDER BY used for?              | Sorts query result in ascending/descending order.                |
+| 27 | What is DISTINCT?                       | Removes duplicate rows from result.                              |
+| 28 | What is a Schema?                       | Logical structure of the database.                               |
+| 29 | What is a Stored Procedure?             | Precompiled SQL code saved in database.                          |
+| 30 | What is a Trigger?                      | Code executed automatically on data changes.                     |
+| 31 | What is a Cursor?                       | A pointer to retrieve query results row-by-row.                  |
+| 32 | What is an Alias?                       | Temporary name for column or table.                              |
+| 33 | What is LIKE used for?                  | Pattern matching with `%` and `_`.                               |
+| 34 | What is BETWEEN used for?               | Filters data within a range.                                     |
+| 35 | What is IN used for?                    | Checks if a value matches any in a list.                         |
+| 36 | What is ANY/ALL?                        | Compares a value with a subquery result set.                     |
+| 37 | What is a Self Join?                    | Joins a table to itself.                                         |
+| 38 | What is a Cross Join?                   | Returns all possible combinations.                               |
+| 39 | What is UNION?                          | Combines results of two SELECT statements.                       |
+| 40 | What is SQL Injection?                  | A security vulnerability using malicious SQL statements.         |
+
+---
+
+## 🧠 **B. PL/SQL Viva Questions (30+)**
+
+| No | Question                                         | 1-Line Answer                                             |
+| -- | ------------------------------------------------ | --------------------------------------------------------- |
+| 41 | What is PL/SQL?                                  | Oracle’s procedural extension to SQL.                     |
+| 42 | What are PL/SQL blocks?                          | Anonymous, Procedure, Function, Trigger, Package.         |
+| 43 | What is DECLARE section?                         | Used to define variables, cursors, constants.             |
+| 44 | What is BEGIN section?                           | Contains executable statements.                           |
+| 45 | What is EXCEPTION section?                       | Handles runtime errors.                                   |
+| 46 | What is a Procedure?                             | A block performing a specific task; may not return value. |
+| 47 | What is a Function?                              | A block that returns a single value.                      |
+| 48 | Difference between Procedure and Function?       | Function returns value; Procedure doesn’t.                |
+| 49 | What is a Cursor?                                | Used to process rows one-by-one from a query.             |
+| 50 | Types of Cursors?                                | Implicit and Explicit.                                    |
+| 51 | What is an Exception?                            | An error detected during execution.                       |
+| 52 | Types of Exceptions?                             | Predefined, User-defined.                                 |
+| 53 | What is Trigger?                                 | Code that runs automatically on table events.             |
+| 54 | Types of Triggers?                               | BEFORE/AFTER INSERT, UPDATE, DELETE.                      |
+| 55 | What is COMMIT?                                  | Saves all pending transactions.                           |
+| 56 | What is ROLLBACK?                                | Undoes uncommitted transactions.                          |
+| 57 | What is SAVEPOINT?                               | Marks a point for partial rollback.                       |
+| 58 | What are IN, OUT parameters?                     | IN passes value, OUT returns value.                       |
+| 59 | What is %TYPE?                                   | Declares variable with same datatype as table column.     |
+| 60 | What is %ROWTYPE?                                | Declares variable for an entire row of table.             |
+| 61 | What is the difference between LOOP, WHILE, FOR? | Different control structures for iteration.               |
+| 62 | What is SYSDATE?                                 | Returns current system date and time.                     |
+| 63 | What is DBMS_OUTPUT.PUT_LINE?                    | Prints messages in PL/SQL.                                |
+| 64 | What is RAISE_APPLICATION_ERROR?                 | Used to raise custom exceptions.                          |
+| 65 | What is a Package?                               | Group of related procedures/functions.                    |
+| 66 | What is a Record?                                | A composite variable with multiple fields.                |
+| 67 | What are Nested Blocks?                          | PL/SQL blocks within another block.                       |
+| 68 | Difference between Anonymous and Named block?    | Named blocks are reusable; anonymous are one-time.        |
+| 69 | What is pragma EXCEPTION_INIT?                   | Links exception with Oracle error number.                 |
+| 70 | What is a Trigger’s “OLD” and “NEW”?             | Refers to data before and after DML operation.            |
+
+---
+
+## 🧠 **C. MongoDB Viva Questions (30+)**
+
+| No  | Question                              | 1-Line Answer                                    |
+| --- | ------------------------------------- | ------------------------------------------------ |
+| 71  | What is MongoDB?                      | A NoSQL document-oriented database.              |
+| 72  | What is a Collection?                 | Equivalent to a table in SQL.                    |
+| 73  | What is a Document?                   | Equivalent to a row (stored in BSON/JSON).       |
+| 74  | What is BSON?                         | Binary JSON — internal data format.              |
+| 75  | Difference between MongoDB and MySQL? | MongoDB is schema-less; MySQL is schema-based.   |
+| 76  | What is `_id` field?                  | Primary key for every MongoDB document.          |
+| 77  | What is `insertOne()`?                | Inserts a single document.                       |
+| 78  | What is `insertMany()`?               | Inserts multiple documents.                      |
+| 79  | What is `$set` operator?              | Updates specific fields.                         |
+| 80  | What is `$inc` operator?              | Increments numeric values.                       |
+| 81  | What is `$push`?                      | Adds element to an array.                        |
+| 82  | What is `$pull`?                      | Removes element from an array.                   |
+| 83  | What is `$gt` and `$lt`?              | Greater than / Less than.                        |
+| 84  | What is `$regex`?                     | Performs pattern matching.                       |
+| 85  | What is `find()`?                     | Retrieves all documents from collection.         |
+| 86  | What is `aggregate()`?                | Performs data aggregation (like GROUP BY).       |
+| 87  | What is `$group`?                     | Groups data by a key.                            |
+| 88  | What is `$match`?                     | Filters documents in aggregation.                |
+| 89  | What is `$sort`?                      | Sorts results ascending/descending.              |
+| 90  | What is `createIndex()`?              | Creates an index for faster queries.             |
+| 91  | What is `drop()`?                     | Deletes a collection or database.                |
+| 92  | What is `updateOne()`?                | Updates first matching document.                 |
+| 93  | What is `updateMany()`?               | Updates all matching documents.                  |
+| 94  | What is `deleteOne()`?                | Deletes first matching document.                 |
+| 95  | What is `deleteMany()`?               | Deletes all matching documents.                  |
+| 96  | What is `mapReduce()`?                | Aggregates large datasets using map & reduce.    |
+| 97  | What is a Replica Set?                | Set of MongoDB servers for high availability.    |
+| 98  | What is a Shard?                      | A horizontal partition of data.                  |
+| 99  | What is Mongo Shell?                  | Command-line interface to interact with MongoDB. |
+| 100 | What is the command to see databases? | `show dbs`                                       |
+
+---
+
+# 🎯 PART 2 — ULTIMATE COMMAND CHEAT SHEET (SQL, PL/SQL, MongoDB)
+
+---
+
+## ⚙️ **1️⃣ MySQL Cheat Sheet (Ubuntu)**
+
+### 🧩 **Installation & Login**
+
+```bash
+sudo apt update
+sudo apt install mysql-server -y
+sudo systemctl start mysql
+sudo mysql -u root -p
+```
+
+### 🧩 **Basic Commands**
+
+```sql
+SHOW DATABASES;
+CREATE DATABASE college;
+USE college;
+SHOW TABLES;
+```
+
+### 🧩 **Table Creation & Modification**
+
+```sql
+CREATE TABLE student(id INT PRIMARY KEY, name VARCHAR(50), city VARCHAR(30));
+DESCRIBE student;
+ALTER TABLE student ADD COLUMN marks INT;
+DROP TABLE student;
+```
+
+### 🧩 **Data Manipulation**
+
+```sql
+INSERT INTO student VALUES(1,'Yash','Pune',90);
+SELECT * FROM student;
+UPDATE student SET marks=95 WHERE id=1;
+DELETE FROM student WHERE id=1;
+```
+
+### 🧩 **Joins & Subqueries**
+
+```sql
+SELECT s.name,c.course_name FROM student s JOIN course c ON s.id=c.sid;
+SELECT * FROM student WHERE marks>(SELECT AVG(marks) FROM student);
+```
+
+### 🧩 **Aggregation & Grouping**
+
+```sql
+SELECT city,COUNT(*) FROM student GROUP BY city;
+SELECT city,AVG(marks) FROM student GROUP BY city HAVING AVG(marks)>80;
+```
+
+### 🧩 **View, Index, and Constraints**
+
+```sql
+CREATE VIEW highscore AS SELECT * FROM student WHERE marks>85;
+CREATE INDEX idx_name ON student(name);
+ALTER TABLE student ADD CONSTRAINT chk_marks CHECK(marks<=100);
+```
+
+### 🧩 **Exit**
+
+```sql
+exit;
+```
+
+---
+
+## ⚙️ **2️⃣ PL/SQL Cheat Sheet (Run in Oracle/SQL*Plus or MySQL Procedural Mode)**
+
+### 🧩 **Basic Block**
+
+```sql
+SET SERVEROUTPUT ON;
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Hello World');
+END;
+/
+```
+
+### 🧩 **Variables**
+
+```sql
+DECLARE
+  v_name VARCHAR2(20) := 'Yash';
+BEGIN
+  DBMS_OUTPUT.PUT_LINE(v_name);
+END;
+/
+```
+
+### 🧩 **IF-ELSE & LOOP**
+
+```sql
+DECLARE
+  v_marks INT := 85;
+BEGIN
+  IF v_marks>=75 THEN
+    DBMS_OUTPUT.PUT_LINE('Distinction');
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('Pass');
+  END IF;
+END;
+/
+```
+
+### 🧩 **Cursor Example**
+
+```sql
+DECLARE
+  CURSOR c IS SELECT * FROM student;
+  v_row student%ROWTYPE;
+BEGIN
+  OPEN c;
+  LOOP
+    FETCH c INTO v_row;
+    EXIT WHEN c%NOTFOUND;
+    DBMS_OUTPUT.PUT_LINE(v_row.name);
+  END LOOP;
+  CLOSE c;
+END;
+/
+```
+
+### 🧩 **Procedure**
+
+```sql
+CREATE OR REPLACE PROCEDURE greet(p_name VARCHAR2) IS
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Hello ' || p_name);
+END;
+/
+EXEC greet('Yash');
+```
+
+### 🧩 **Function**
+
+```sql
+CREATE OR REPLACE FUNCTION square(num INT) RETURN INT IS
+BEGIN
+  RETURN num*num;
+END;
+/
+SELECT square(5) FROM dual;
+```
+
+### 🧩 **Trigger**
+
+```sql
+CREATE OR REPLACE TRIGGER stud_audit
+BEFORE INSERT ON student
+FOR EACH ROW
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('New student added');
+END;
+/
+```
+
+---
+
+## ⚙️ **3️⃣ MongoDB Cheat Sheet (Ubuntu)**
+
+### 🧩 **Installation**
+
+```bash
+sudo apt update
+sudo apt install -y mongodb-org
+sudo systemctl start mongod
+mongosh
+```
+
+### 🧩 **Database & Collection**
+
+```javascript
+show dbs;
+use college;
+db.createCollection("student");
+show collections;
+```
+
+### 🧩 **Insert Documents**
+
+```javascript
+db.student.insertOne({id:1,name:"Yash",city:"Pune",marks:90});
+db.student.insertMany([{id:2,name:"Amit",city:"Delhi"},{id:3,name:"Ravi",city:"Pune"}]);
+```
+
+### 🧩 **Query Documents**
+
+```javascript
+db.student.find();
+db.student.find({city:"Pune"});
+db.student.find({marks:{$gt:80}});
+db.student.find({}, {name:1,city:1,_id:0});
+```
+
+### 🧩 **Update & Delete**
+
+```javascript
+db.student.updateOne({id:1},{$set:{marks:95}});
+db.student.updateMany({city:"Pune"},{$inc:{marks:5}});
+db.student.deleteOne({id:2});
+db.student.deleteMany({city:"Delhi"});
+```
+
+### 🧩 **Aggregation**
+
+```javascript
+db.student.aggregate([
+  {$group:{_id:"$city",avgMarks:{$avg:"$marks"}}},
+  {$sort:{avgMarks:-1}}
+]);
+```
+
+### 🧩 **Indexes**
+
+```javascript
+db.student.createIndex({name:1});
+db.student.getIndexes();
+```
+
+### 🧩 **MapReduce Example**
+
+```javascript
+var map = function(){ emit(this.city, this.marks); };
+var reduce = function(key, values){ return Array.sum(values)/values.length; };
+db.student.mapReduce(map,reduce,{out:"avgMarks"});
+db.avgMarks.find();
+```
+
+### 🧩 **Exit**
+
+```javascript
+exit
+```
+
+---
+
+# 🧾 SUMMARY QUICK TABLE
+
+| Task            | MySQL                        | PL/SQL                        | MongoDB                    |
+| --------------- | ---------------------------- | ----------------------------- | -------------------------- |
+| Create Database | `CREATE DATABASE name;`      | —                             | `use name`                 |
+| Create Table    | `CREATE TABLE t(...);`       | —                             | `db.createCollection("t")` |
+| Insert          | `INSERT INTO t VALUES(...);` | —                             | `db.t.insertOne({...})`    |
+| Select          | `SELECT * FROM t;`           | —                             | `db.t.find()`              |
+| Update          | `UPDATE t SET ...`           | —                             | `db.t.updateOne({...})`    |
+| Delete          | `DELETE FROM t WHERE ...;`   | —                             | `db.t.deleteOne({...})`    |
+| Procedure       | `CREATE PROCEDURE`           | `CREATE OR REPLACE PROCEDURE` | JavaScript Function        |
+| Trigger         | `CREATE TRIGGER`             | `CREATE TRIGGER`              | —                          |
+| Cursor          | —                            | `DECLARE CURSOR`              | —                          |
+| Grouping        | `GROUP BY`                   | —                             | `$group`                   |
+| View            | `CREATE VIEW`                | —                             | —                          |
+| Index           | `CREATE INDEX`               | —                             | `db.t.createIndex()`       |
+
+---
+
+Would you like me to make this into a **printable “DBMS Practical Viva PDF Handbook (SQL + PL/SQL + MongoDB + Java Connectivity)”** — fully formatted for exam prep?

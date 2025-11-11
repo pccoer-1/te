@@ -1,0 +1,218 @@
+-- CHIT 1
+CREATE DATABASE bank;
+USE bank;
+CREATE TABLE Customer(C_id INT PRIMARY KEY,Cname VARCHAR(50),City VARCHAR(50));
+CREATE TABLE Account(Acc_id INT PRIMARY KEY,C_id INT,Acc_Type VARCHAR(20),Amount DECIMAL(10,2),FOREIGN KEY(C_id) REFERENCES Customer(C_id));
+INSERT INTO Customer VALUES(1,'Pooja','Pune'),(2,'Rahul','Mumbai'),(3,'Meera','Pune'),(4,'Vinod','Delhi');
+INSERT INTO Account VALUES(101,1,'saving',5000),(102,2,'current',20000),(103,3,'saving',8000),(104,4,'saving',3000);
+SELECT Cname,Acc_Type,Amount FROM Customer NATURAL JOIN Account WHERE Acc_Type='saving';
+SELECT Cname,Acc_Type,Amount FROM Customer LEFT JOIN Account ON Customer.C_id=Account.C_id WHERE Acc_Type='saving';
+SELECT Cname,Acc_Type,Amount FROM Customer RIGHT JOIN Account ON Customer.C_id=Account.C_id WHERE Acc_Type='saving';
+SELECT * FROM Customer WHERE City=(SELECT City FROM Customer WHERE Cname='Pooja');
+SELECT * FROM Account WHERE Amount<(SELECT AVG(Amount) FROM Account);
+SELECT C_id FROM Account WHERE Amount=(SELECT MAX(Amount) FROM Account);
+SELECT Amount,Acc_Type FROM Account a1 WHERE Amount=(SELECT MIN(Amount) FROM Account a2 WHERE a2.Acc_Type=a1.Acc_Type);
+SELECT * FROM Account WHERE Amount>ANY(SELECT Amount FROM Account WHERE Acc_Type='saving');
+
+-- CHIT 2
+SET SERVEROUTPUT ON;
+DECLARE
+v_roll VARCHAR2(20);
+v_namebook VARCHAR2(100);
+v_issue DATE;
+v_days NUMBER;
+v_amt NUMBER;
+BEGIN
+v_roll:='R001';
+v_namebook:='DBMS';
+SELECT DateofIssue INTO v_issue FROM Borrower WHERE Rollin=v_roll AND NameofBook=v_namebook;
+v_days:=TRUNC(SYSDATE)-TRUNC(v_issue);
+IF v_days<=15 THEN v_amt:=0;
+ELSIF v_days<=30 THEN v_amt:=v_days*5;
+ELSE v_amt:=v_days*50;
+END IF;
+UPDATE Borrower SET Status='R' WHERE Rollin=v_roll AND NameofBook=v_namebook;
+IF v_amt>0 THEN INSERT INTO Fine(Roll_no,Date,Amt) VALUES(v_roll,SYSDATE,v_amt); END IF;
+END;
+/
+
+-- CHIT 3
+SET SERVEROUTPUT ON;
+DECLARE
+v_roll NUMBER:=1;
+v_att NUMBER;
+BEGIN
+SELECT Att INTO v_att FROM Stud WHERE Roll=v_roll;
+IF v_att<75 THEN DBMS_OUTPUT.PUT_LINE('Term not granted'); UPDATE Stud SET Status='D' WHERE Roll=v_roll;
+ELSE DBMS_OUTPUT.PUT_LINE('Term granted'); UPDATE Stud SET Status='ND' WHERE Roll=v_roll;
+END IF;
+COMMIT;
+END;
+/
+
+-- CHIT 4
+CREATE DATABASE uni;
+USE uni;
+CREATE TABLE student(S_ID INT PRIMARY KEY,name VARCHAR(50),dept_name VARCHAR(50),tot_cred INT);
+CREATE TABLE instructor(T_ID INT PRIMARY KEY,name VARCHAR(50),dept_name VARCHAR(50),salary DECIMAL(10,2));
+CREATE TABLE course(course_id VARCHAR(20) PRIMARY KEY,title VARCHAR(100),dept_name VARCHAR(50),credits INT);
+INSERT INTO instructor VALUES(1,'Amol','Computer',45000),(2,'Amit','Math',40000),(3,'Ramesh','Computer',47000);
+INSERT INTO student VALUES(1,'Sita','Computer',120),(2,'Ravi','Math',90);
+INSERT INTO course VALUES('CS101','DBMS','Computer',4),('M101','Algebra','Math',3);
+SELECT dept_name,AVG(salary) avg_sal FROM instructor GROUP BY dept_name HAVING AVG(salary)>42000;
+UPDATE instructor SET salary=salary*1.10 WHERE dept_name='Computer';
+SELECT name FROM instructor WHERE name NOT IN('Amol','Amit');
+SELECT name FROM student WHERE name LIKE '%am%';
+SELECT s.name FROM student s JOIN course c ON s.dept_name=c.dept_name WHERE s.dept_name='Computer' AND c.title LIKE '%DBMS%';
+
+-- CHIT 5
+DECLARE
+CURSOR c_new IS SELECT * FROM N_RollCall;
+v_row N_RollCall%ROWTYPE;
+BEGIN
+FOR v_row IN c_new LOOP
+INSERT INTO O_RollCall VALUES(v_row.Roll,v_row.Name,v_row.Status);
+END LOOP;
+COMMIT;
+END;
+/
+
+-- CHIT 6
+CREATE OR REPLACE PROCEDURE proc_Grade(p_name IN VARCHAR2,p_marks IN NUMBER) IS
+v_class VARCHAR2(30);
+BEGIN
+IF p_marks BETWEEN 990 AND 1500 THEN v_class:='Distinction';
+ELSIF p_marks BETWEEN 900 AND 989 THEN v_class:='First Class';
+ELSIF p_marks BETWEEN 825 AND 899 THEN v_class:='Higher Second Class';
+ELSE v_class:='Other';
+END IF;
+INSERT INTO Result(Name,Class) VALUES(p_name,v_class);
+COMMIT;
+END;
+/
+BEGIN
+proc_Grade('Student1',1000);
+END;
+/
+
+-- CHIT 7
+CREATE OR REPLACE FUNCTION func_Grade(p_marks IN NUMBER) RETURN VARCHAR2 IS
+v_class VARCHAR2(30);
+BEGIN
+IF p_marks BETWEEN 990 AND 1500 THEN v_class:='Distinction';
+ELSIF p_marks BETWEEN 900 AND 989 THEN v_class:='First Class';
+ELSIF p_marks BETWEEN 825 AND 899 THEN v_class:='Higher Second Class';
+ELSE v_class:='Other';
+END IF;
+RETURN v_class;
+END;
+/
+DECLARE
+v_result VARCHAR2(30);
+BEGIN
+v_result:=func_Grade(950);
+INSERT INTO Result(Name,Class) VALUES('Student2',v_result);
+COMMIT;
+END;
+/
+
+-- CHIT 8
+CREATE TABLE teaches(T_ID INT,course_id VARCHAR(20),sec_id VARCHAR(10),semester VARCHAR(10),year INT);
+CREATE TABLE student(S_ID INT PRIMARY KEY,name VARCHAR(50),dept_name VARCHAR(50),tot_cred INT);
+CREATE TABLE instructor(T_ID INT PRIMARY KEY,name VARCHAR(50),dept_name VARCHAR(50),salary DECIMAL(10,2));
+CREATE TABLE course(course_id VARCHAR(20) PRIMARY KEY,title VARCHAR(100),dept_name VARCHAR(50),credits INT);
+INSERT INTO instructor VALUES(1,'Arun','Computer',55000);
+INSERT INTO course VALUES('CSE101','DBMS','Computer',4);
+INSERT INTO student VALUES(1,'Ravi','Computer',120);
+INSERT INTO teaches VALUES(1,'CSE101','A','Winter',2025);
+SELECT t.course_id,t.semester FROM teaches t JOIN instructor i ON t.T_ID=i.T_ID ORDER BY t.semester;
+CREATE VIEW student_view AS SELECT * FROM student;
+ALTER TABLE student CHANGE COLUMN dept_name department_name VARCHAR(50);
+DELETE FROM student WHERE department_name IS NULL;
+
+-- CHIT 11
+CREATE TABLE Library(id INT PRIMARY KEY,title VARCHAR(100),author VARCHAR(100));
+CREATE TABLE Library_Audit(audit_id INT AUTO_INCREMENT PRIMARY KEY,id INT,title VARCHAR(100),author VARCHAR(100),action VARCHAR(10),action_time DATETIME);
+DELIMITER $$
+CREATE TRIGGER before_library_change BEFORE UPDATE ON Library
+FOR EACH ROW
+BEGIN
+INSERT INTO Library_Audit(id,title,author,action,action_time) VALUES(OLD.id,OLD.title,OLD.author,'UPDATE',NOW());
+END$$
+DELIMITER ;
+
+-- CHIT 12
+DELIMITER $$
+CREATE TRIGGER after_library_delete AFTER DELETE ON Library
+FOR EACH ROW
+BEGIN
+INSERT INTO Library_Audit(id,title,author,action,action_time) VALUES(OLD.id,OLD.title,OLD.author,'DELETE',NOW());
+END$$
+DELIMITER ;
+
+-- CHIT 17
+CREATE DATABASE comp;
+USE comp;
+CREATE TABLE Employee(Emp_id INT PRIMARY KEY,Ename VARCHAR(50),City VARCHAR(50),Salary DECIMAL(10,2),Commission DECIMAL(10,2));
+CREATE TABLE Project(P_id INT PRIMARY KEY,Pname VARCHAR(50),City VARCHAR(50));
+INSERT INTO Employee VALUES(1,'Amit','Pune',25000,NULL),(2,'Akhil','Nasik',30000,0),(3,'Ramesh','Mumbai',20000,NULL),(4,'Asha','Mumbai',22000,0);
+INSERT INTO Project VALUES(1,'AI','Pune'),(2,'IOT','Mumbai');
+SELECT DISTINCT City FROM Employee;
+SELECT MAX(Salary),MIN(Salary) FROM Employee;
+SELECT * FROM Employee ORDER BY Salary;
+SELECT Ename FROM Employee WHERE City IN('Nasik','Pune');
+SELECT Ename FROM Employee WHERE Commission IS NULL OR Commission=0;
+UPDATE Employee SET City='Nashik' WHERE Ename='Amit';
+SELECT * FROM Employee WHERE Ename LIKE 'A%';
+SELECT COUNT(*) FROM Employee WHERE City='Mumbai';
+SELECT City,COUNT(*) FROM Employee GROUP BY City;
+SELECT e.City,p.City FROM Employee e CROSS JOIN Project p;
+SELECT City,MIN(Salary) FROM Employee GROUP BY City;
+SELECT City,MAX(Salary) FROM Employee GROUP BY City HAVING MAX(Salary)>26000;
+DELETE FROM Employee WHERE Salary>30000;
+
+-- CHIT 19
+CREATE DATABASE empdb;
+USE empdb;
+CREATE TABLE emp(Eno INT PRIMARY KEY,Ename VARCHAR(50),Address VARCHAR(100) DEFAULT 'Nashik',Joindate DATE,Post VARCHAR(50));
+INSERT INTO emp VALUES(101,'Sachin','Nashik',CURDATE(),'Staff');
+CREATE INDEX idx_ename ON emp(Ename);
+CREATE VIEW emp_view AS SELECT Ename,NULL AS Salary FROM emp;
+
+-- CHIT 23
+CREATE DATABASE testdb;
+USE testdb;
+CREATE TABLE Employee(SSN INT PRIMARY KEY,Ename VARCHAR(50),state VARCHAR(50),salary DECIMAL(10,2));
+INSERT INTO Employee VALUES(101,'Ravi','MH',50000),(102,'Amit','GJ',40000);
+SELECT * FROM Employee WHERE SSN=101;
+UPDATE Employee SET state='TN' WHERE state='MH';
+DELETE FROM Employee WHERE state='GJ';
+
+-- CHIT 24
+CREATE DATABASE corp;
+USE corp;
+CREATE TABLE Emp(emp_id INT PRIMARY KEY,ename VARCHAR(50),street VARCHAR(100),city VARCHAR(50));
+CREATE TABLE Company(c_id INT PRIMARY KEY,cname VARCHAR(50),city VARCHAR(50));
+CREATE TABLE Works(emp_id INT,c_id INT,ename VARCHAR(50),cname VARCHAR(50),sal DECIMAL(10,2));
+CREATE TABLE Manager(mgr_id INT PRIMARY KEY,mgrname VARCHAR(50));
+INSERT INTO Emp VALUES(1,'Amit','abc street','Pune'),(2,'Ravi','xyz street','Delhi');
+INSERT INTO Company VALUES(1,'ABC','Pune'),(2,'Bosch','Pune'),(3,'SBC','Mumbai');
+INSERT INTO Works VALUES(1,1,'Amit','ABC',25000),(2,2,'Ravi','Bosch',30000),(2,3,'Ravi','SBC',55000);
+UPDATE Company SET city='Pune' WHERE cname='ABC';
+UPDATE Works SET sal=CASE WHEN sal>20000 THEN sal*1.03 ELSE sal*1.10 END WHERE cname='Mbank';
+SELECT e.ename FROM Emp e JOIN Works w ON e.emp_id=w.emp_id JOIN Company c ON w.c_id=c.c_id WHERE c.cname='Bosch' AND c.city='Pune';
+DELETE FROM Works WHERE cname='SBC' AND sal>50000;
+
+-- CHIT 25
+CREATE DATABASE dutydb;
+USE dutydb;
+CREATE TABLE Empl(e_no INT PRIMARY KEY,e_name VARCHAR(50),post VARCHAR(50),pay_rate DECIMAL(10,2));
+CREATE TABLE Position(pos_no INT PRIMARY KEY,post VARCHAR(50));
+CREATE TABLE Duty_alloc(pos_no INT,e_no INT,month INT,year INT,shift VARCHAR(10));
+INSERT INTO Empl VALUES(123,'Sachin','Manager',30000),(124,'Ravi','Staff',20000);
+INSERT INTO Position VALUES(1,'Manager'),(2,'Staff');
+INSERT INTO Duty_alloc VALUES(1,123,4,2023,'first'),(2,124,4,2023,'second');
+SELECT * FROM Duty_alloc WHERE e_no=123 AND month=4 AND year=2023 AND shift='first';
+SELECT * FROM Empl WHERE pay_rate>=(SELECT pay_rate FROM Empl WHERE e_name='Sachin');
+CREATE VIEW post_salary_stats AS SELECT post,MIN(pay_rate),MAX(pay_rate),AVG(pay_rate) FROM Empl GROUP BY post;
+SELECT shift,COUNT(DISTINCT e_no) FROM Duty_alloc d JOIN Empl e ON d.e_no=e.e_no WHERE e.post='Manager' GROUP BY shift;

@@ -1,0 +1,700 @@
+Chit 1 — MySQL (Joins & Subqueries) 
+Assume tables and sample inserts: 
+CREATE TABLE Customer( 
+C_id INT PRIMARY KEY, 
+Cname VARCHAR(50), 
+city VARCHAR(50) 
+); 
+CREATE TABLE Account( 
+Acc_id INT PRIMARY KEY, 
+C_id INT, 
+Acc_Type VARCHAR(20), 
+amount DECIMAL(12,2), 
+FOREIGN KEY (C_id) REFERENCES Customer(C_id) 
+); -- sample rows (you should insert the rows from your chit) 
+Solutions: 
+1. Show cname, Acc_Type, amount for customers having a saving account: 
+SELECT c.Cname, a.Acc_Type, a.amount 
+FROM Customer c 
+JOIN Account a ON c.C_id = a.C_id 
+WHERE a.Acc_Type = 'saving'; 
+2. Display data using NATURAL, LEFT, RIGHT join (examples — NATURAL works only if 
+column names match): -- Natural join (if column names matching) 
+SELECT * FROM Customer NATURAL JOIN Account; 
+-- Left join 
+SELECT c.*, a.* FROM Customer c LEFT JOIN Account a ON c.C_id = a.C_id; -- Right join 
+SELECT c.*, a.* FROM Customer c RIGHT JOIN Account a ON c.C_id = a.C_id; 
+3. Customers living in the same city as ‘pooja’: 
+SELECT c2.* 
+FROM Customer c1 
+JOIN Customer c2 ON c1.city = c2.city 
+WHERE c1.Cname = 'pooja' AND c2.Cname <> 'pooja'; 
+4. Accounts having less amount than average amount (bank-wide): 
+SELECT * FROM Account 
+WHERE amount < (SELECT AVG(amount) FROM Account); 
+5. Display C_id having maximum amount in account: 
+SELECT C_id FROM Account 
+WHERE amount = (SELECT MAX(amount) FROM Account); 
+6. Amount and acc_type of customers whose amount is the minimum for that 
+Acc_Type: 
+SELECT a.amount, a.Acc_Type 
+FROM Account a 
+WHERE a.amount = ( 
+SELECT MIN(amount) FROM Account WHERE Acc_Type = a.Acc_Type 
+); 
+7. Amount of those accounts whose amount is higher than amount of any saving 
+account: 
+SELECT amount FROM Account 
+WHERE amount > ANY (SELECT amount FROM Account WHERE Acc_Type = 'saving'); 
+Chit 2 — PL/SQL block (Control structure & Exception handling) 
+Schema: Borrower(Rollin, Name, DateofIssue, NameofBook, Status) and Fine(Roll_no, Date, 
+Amt) 
+PL/SQL block (Oracle style): 
+DECLARE 
+v_roll_in Borrower.Rollin%TYPE := &roll_in; 
+v_book   Borrower.NameofBook%TYPE := '&book_name'; 
+v_issue_date Borrower.DateofIssue%TYPE; 
+v_days NUMBER; 
+v_amt NUMBER := 0; 
+v_status Borrower.Status%TYPE; 
+BEGIN -- fetch date of issue and status 
+SELECT DateofIssue, Status INTO v_issue_date, v_status 
+FROM Borrower 
+WHERE Rollin = v_roll_in AND NameofBook = v_book; 
+v_days := TRUNC(SYSDATE) - TRUNC(v_issue_date); 
+IF v_days <= 0 THEN 
+DBMS_OUTPUT.PUT_LINE('Book just issued or invalid date.'); 
+ELSE 
+IF v_days BETWEEN 15 AND 30 THEN 
+v_amt := v_days * 5; 
+ELSIF v_days > 30 THEN 
+v_amt := v_days * 50; 
+ELSE 
+v_amt := v_days * 5; 
+END IF; 
+-- update status to Returned 'R' 
+UPDATE Borrower 
+SET Status = 'R' 
+WHERE Rollin = v_roll_in AND NameofBook = v_book; 
+IF v_amt > 0 THEN 
+INSERT INTO Fine(Roll_no, Date, Amt) 
+VALUES (v_roll_in, SYSDATE, v_amt); 
+DBMS_OUTPUT.PUT_LINE('Fine recorded: ' || v_amt); 
+END IF; 
+END IF; 
+COMMIT; 
+EXCEPTION 
+WHEN NO_DATA_FOUND THEN 
+DBMS_OUTPUT.PUT_LINE('No such borrower/book found.'); 
+WHEN OTHERS THEN 
+DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM); 
+ROLLBACK; 
+END; 
+/ 
+(Replace &roll_in and &book_name when running or convert to bind variables in a 
+procedure.) 
+Chit 3 — PL/SQL block (Attendance check, exceptions) 
+Table: Stud(Roll, Att, Status) 
+DECLARE 
+v_roll Stud.Roll%TYPE := &roll_no; 
+v_att NUMBER; 
+BEGIN 
+SELECT Att INTO v_att FROM Stud WHERE Roll = v_roll; 
+IF v_att < 75 THEN 
+UPDATE Stud SET Status = 'D' WHERE Roll = v_roll; 
+DBMS_OUTPUT.PUT_LINE('Term not granted'); 
+ELSE 
+UPDATE Stud SET Status = 'ND' WHERE Roll = v_roll; 
+DBMS_OUTPUT.PUT_LINE('Term granted'); 
+END IF; 
+COMMIT; 
+EXCEPTION 
+WHEN NO_DATA_FOUND THEN 
+DBMS_OUTPUT.PUT_LINE('Roll no not found: ' || v_roll); 
+WHEN OTHERS THEN 
+DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM); 
+ROLLBACK; 
+END; 
+/ 
+Chit 4 — MySQL queries (student/instructor/course) 
+Given tables: student, instructor, course. 
+i. Average salary of instructors in departments where average > 42000: 
+SELECT dept_name, AVG(salary) avg_sal 
+FROM instructor 
+GROUP BY dept_name 
+HAVING AVG(salary) > 42000; 
+ii. Increase salary of each instructor in 'computer' department by 10%: 
+UPDATE instructor 
+SET salary = salary * 1.10 
+WHERE LOWER(dept_name) = 'computer'; 
+iii. Names of instructors whose names are neither 'Amol' nor 'Amit': 
+SELECT name FROM instructor 
+WHERE name NOT IN ('Amol', 'Amit'); 
+iv. Names of students containing 'am' as substring (case-insensitive): 
+SELECT name FROM student 
+WHERE LOWER(name) LIKE '%am%'; 
+v. Names of students from computer department that take "DBMS" courses: 
+Assuming an enrollment linking table takes(student_id, course_id): 
+SELECT DISTINCT s.name 
+FROM student s 
+JOIN takes t ON s.S_ID = t.S_ID 
+JOIN course c ON t.course_id = c.course_id 
+WHERE LOWER(s.dept_name)='computer' AND LOWER(c.title) LIKE '%dbms%'; 
+Chit 5 — PL/SQL using parameterized cursor to merge N_RollCall into O_RollCall 
+Assume N_RollCall(RollNo, Name, ...) and O_RollCall(RollNo, Name, ...). 
+PL/SQL block: 
+DECLARE 
+CURSOR c_new IS SELECT RollNo, Name FROM N_RollCall; 
+v_roll c_new%ROWTYPE; 
+v_exists NUMBER; 
+BEGIN 
+FOR v_row IN c_new LOOP 
+SELECT COUNT(*) INTO v_exists FROM O_RollCall WHERE RollNo = v_row.RollNo; 
+IF v_exists = 0 THEN 
+INSERT INTO O_RollCall(RollNo, Name) VALUES (v_row.RollNo, v_row.Name); 
+ELSE -- skip if exists 
+NULL; 
+END IF; 
+END LOOP; 
+COMMIT; 
+EXCEPTION 
+WHEN OTHERS THEN 
+DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM); 
+ROLLBACK; 
+END; 
+/ 
+Chit 6 — Stored Procedure proc_Grade (categorize students by marks) — PL/SQL Stored 
+Procedure 
+Spec: marks up to 1500: 
+• 990–1500 -> Distinction 
+• 900–989 -> First class 
+• 825–899 -> Higher Second Class 
+(Interpretation of ranges adjusted to be non-overlapping) 
+Procedure and usage block: 
+CREATE OR REPLACE PROCEDURE proc_grade(p_name IN VARCHAR2, p_marks IN NUMBER, 
+p_result OUT VARCHAR2) IS 
+BEGIN 
+IF p_marks BETWEEN 990 AND 1500 THEN 
+p_result := 'Distinction'; 
+ELSIF p_marks BETWEEN 900 AND 989 THEN 
+p_result := 'First Class'; 
+ELSIF p_marks BETWEEN 825 AND 899 THEN 
+p_result := 'Higher Second Class'; 
+ELSE 
+p_result := 'Other'; 
+END IF; 
+EXCEPTION 
+WHEN OTHERS THEN 
+p_result := 'Error: ' || SQLERRM; 
+END; 
+/ 
+Usage block: 
+DECLARE 
+v_res VARCHAR2(50); 
+BEGIN 
+proc_grade('Rahul', 950, v_res); 
+DBMS_OUTPUT.PUT_LINE('Class: ' || v_res); 
+END; 
+/ 
+Chit 7 — Stored Function (returning category string) 
+Stored function returning class: 
+CREATE OR REPLACE FUNCTION func_grade(p_marks IN NUMBER) RETURN VARCHAR2 IS 
+v_class VARCHAR2(50); 
+BEGIN 
+IF p_marks BETWEEN 990 AND 1500 THEN 
+v_class := 'Distinction'; 
+ELSIF p_marks BETWEEN 900 AND 989 THEN 
+v_class := 'First Class'; 
+ELSIF p_marks BETWEEN 825 AND 899 THEN 
+v_class := 'Higher Second Class'; 
+ELSE 
+v_class := 'Other'; 
+END IF; 
+RETURN v_class; 
+END; 
+/ 
+Usage: 
+SELECT func_grade(total_marks) FROM Stud_Marks; -- or 
+DECLARE v_class VARCHAR2(50); 
+BEGIN 
+SELECT func_grade(total_marks) INTO v_class FROM Stud_Marks WHERE name='John'; 
+DBMS_OUTPUT.PUT_LINE(v_class); 
+END; 
+/ 
+Chit 8 — MySQL (teaches / views / alter / delete) 
+i. Names of instructors who have taught courses semester-wise: 
+SELECT DISTINCT i.name, t.semester 
+FROM instructor i 
+JOIN teaches t ON i.T_ID = t.T_ID 
+ORDER BY t.semester, i.name; 
+ii. Create view retrieving student details: 
+CREATE VIEW vw_student_details AS 
+SELECT S_ID, name, dept_name, tot_cred FROM student; 
+iii. Rename column dept_name to department_name: 
+(MySQL) 
+ALTER TABLE student CHANGE COLUMN dept_name department_name VARCHAR(50); 
+iv. Delete students whose department is NULL: 
+DELETE FROM student WHERE dept_name IS NULL; 
+Chit 9 — MongoDB orderinfo collection queries 
+Given document structure: 
+{ cust_id:123, cust_name:"abc", status:"A", price:250 } 
+i. Average price for each customer having status 'A': 
+db.orderinfo.aggregate([ 
+{ $match: { status: 'A' } }, 
+{ $group: { _id: "$cust_id", avgPrice: { $avg: "$price" } } } 
+]) 
+ii. Display status of customers whose price between 100 and 1000: 
+db.orderinfo.find({ price: { $gte: 100, $lte: 1000 } }, { status: 1, _id: 0 }) 
+iii. Display customers without _id field: 
+db.orderinfo.find({}, { _id: 0 }) 
+iv. Create simple index on orderinfo and run a query: 
+db.orderinfo.createIndex({ cust_id: 1 }); -- query using index 
+db.orderinfo.find({ cust_id: 123 }).explain("executionStats"); 
+Chit 10 — Java + MongoDB (basic connectivity + CRUD) 
+Simple Java snippet (using MongoDB Java Driver 4.x — adapt imports & dependency): 
+import com.mongodb.client.*; 
+import org.bson.Document; 
+import static com.mongodb.client.model.Filters.*; 
+public class MongoExample { 
+public static void main(String[] args) { 
+try (MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017")) { 
+MongoDatabase db = mongoClient.getDatabase("InstituteDB"); // 1. Create/Access DB 
+MongoCollection<Document> coll = db.getCollection("students"); // 2. Create/Access 
+Collection 
+// 3. Insert document 
+Document doc = new Document("name","John").append("roll",1).append("age",20); 
+coll.insertOne(doc); 
+// 4. Display data 
+for (Document d : coll.find()) { 
+System.out.println(d.toJson()); 
+} 
+// 5. Remove document 
+coll.deleteOne(eq("roll", 1)); 
+// 6. Update document 
+coll.updateOne(eq("name","John"), new Document("$set", new Document("age",21))); 
+} 
+} 
+} 
+(Add Maven dependency org.mongodb:mongodb-driver-sync or similar.) 
+Chit 11 — Database Trigger (Row-level BEFORE) — track updates/deletes into 
+Library_Audit 
+Assume Library(id, title, author, ...) and Library_Audit(aid, action, old_id, old_title, 
+old_author, action_date). 
+MySQL BEFORE trigger for UPDATE and DELETE (row-level): -- BEFORE UPDATE 
+CREATE TRIGGER trg_library_before_update 
+BEFORE UPDATE ON Library 
+FOR EACH ROW 
+BEGIN 
+INSERT INTO Library_Audit(action, old_id, old_title, old_author, action_date) 
+VALUES ('UPDATE', OLD.id, OLD.title, OLD.author, NOW()); 
+END; 
+/ -- BEFORE DELETE 
+CREATE TRIGGER trg_library_before_delete 
+BEFORE DELETE ON Library 
+FOR EACH ROW 
+BEGIN 
+INSERT INTO Library_Audit(action, old_id, old_title, old_author, action_date) 
+VALUES ('DELETE', OLD.id, OLD.title, OLD.author, NOW()); 
+END; 
+/ 
+(Adjust column names/types to your schema. For Oracle, syntax uses :OLD and SYSDATE.) 
+Chit 12 — Database Trigger (Row-level AFTER) — similar to Chit 11 but AFTER -- AFTER UPDATE 
+CREATE TRIGGER trg_library_after_update 
+AFTER UPDATE ON Library 
+FOR EACH ROW 
+BEGIN 
+INSERT INTO Library_Audit(action, old_id, old_title, old_author, action_date) 
+VALUES ('UPDATE', OLD.id, OLD.title, OLD.author, NOW()); 
+END; 
+/ -- AFTER DELETE 
+CREATE TRIGGER trg_library_after_delete 
+AFTER DELETE ON Library 
+FOR EACH ROW 
+BEGIN 
+INSERT INTO Library_Audit(action, old_id, old_title, old_author, action_date) 
+VALUES ('DELETE', OLD.id, OLD.title, OLD.author, NOW()); 
+END; 
+/ 
+Chit 13 — MongoDB movies collection operations 
+Document structure includes nested producer sub-document. 
+i. Movies with budget > 100,000: 
+db.movies.find({ budget: { $gt: 100000 } }, { name: 1, _id: 0 }); 
+ii. Producers who live in Pune: 
+db.movies.find({ "producer.address": "PUNE" }, { "producer.name": 1, _id: 0 }); 
+iii. Update type from "action" to "horror": 
+db.movies.updateMany({ type: "action" }, { $set: { type: "horror" } }); 
+iv. Find all documents produced by "producer1" with address: 
+db.movies.find({ "producer.name": "producer1" }, { "producer": 1, _id: 0 }); 
+Chit 14 — MongoDB collections Teachers/Department/Students sample operations 
+1. Create collections & insert documents: 
+db.Teachers.insertMany([ 
+{ Tname: "A", dno: 1, Experience: 5, Salary: 12000, Date_of_Joining: ISODate("2020-01
+10") }, 
+{ Tname: "B", dno: 2, Experience: 8, Salary: 15000, Date_of_Joining: ISODate("2018-05
+20") } 
+]); 
+db.Department.insertMany([{ Dno:1, Dname:'CS' }, { Dno:2, Dname:'IT' }]); 
+db.Students.insertMany([{ Sname:'xyz', Roll_No:2, Class:'SE' }, { Sname:'abc', Roll_No:5, 
+Class:'FE' }]); 
+2. Teachers of Dno=2 with salary >= 10000: 
+db.Teachers.find({ dno: 2, Salary: { $gte: 10000 } }); 
+3. Student info having Roll_no=2 or Sname='xyz': 
+db.Students.find({ $or: [ { Roll_No: 2 }, { Sname: 'xyz' } ] }); 
+4. Update student name where Roll_No=5: 
+db.Students.updateOne({ Roll_No: 5 }, { $set: { Sname: 'NewName' } }); 
+5. Delete students with Class 'FE': 
+db.Students.deleteMany({ Class: 'FE' }); 
+6. Create index on Students: 
+db.Students.createIndex({ Roll_No: 1 }); 
+Chit 15 — MongoDB Institute DB Student collection full operations 
+Create DB & Students collection, sample inserts, queries: 
+use Institute; 
+db.Students.insertMany([ 
+{ RollNo:1, StudentName:'Anu', Age:16, Branch:'CS', Address:{City:'Pune', State:'MH'}, 
+Hobbies:['reading','cricket'] }, 
+{ RollNo:2, StudentName:'Bina', Age:17, Branch:'IT', Address:{City:'Mumbai', State:'MH'}, 
+Hobbies:['dance'] }, 
+// ... total 10 documents 
+]); -- 4. Display all students 
+db.Students.find(); -- 5. Age > 15 
+db.Students.find({ Age: { $gt: 15 } }); -- 6. Sorted on name 
+db.Students.find().sort({ StudentName: 1 }); -- 7. Update branch for RollNo 3 
+db.Students.updateOne({ RollNo: 3 }, { $set: { Branch: 'Computer' } }); -- 8. Remove document with RollNo 1 
+db.Students.deleteOne({ RollNo: 1 }); -- 9. Name starts with A 
+db.Students.find({ StudentName: { $regex: '^A', $options: 'i' } }); -- 10. Count documents 
+db.Students.countDocuments(); 
+-- 11. First 5 documents 
+db.Students.find().limit(5); -- 12. Display all (instead of first 3) -> simply no limit: 
+db.Students.find(); -- 13. Students who live in Pune 
+db.Students.find({ "Address.City": "Pune" }); -- 14. Display only Name of all students 
+db.Students.find({}, { StudentName: 1, _id: 0 }); -- 15. Drop collection 
+db.Students.drop(); 
+Chit 16 — MongoDB Aggregation & Indexing (department/teacher) 
+1–2. Create department DB and teacher collection, then aggregate: 
+use department; 
+db.teacher.insertMany([ 
+{ name: 'T1', department: 'CS', experience: 5, salary: 50000 }, 
+{ name: 'T2', department: 'CS', experience: 8, salary: 60000 }, 
+{ name: 'T3', department: 'IT', experience: 3, salary: 30000 } 
+]); -- 3. Department-wise average salary 
+db.teacher.aggregate([ 
+{ $group: { _id: "$department", avgSalary: { $avg: "$salary" } } } 
+]); 
+-- 4. Number of employees in each department 
+db.teacher.aggregate([ 
+{ $group: { _id: "$department", count: { $sum: 1 } } } 
+]); -- 5. Department-wise minimum salary 
+db.teacher.aggregate([ 
+{ $group: { _id: "$department", minSalary: { $min: "$salary" } } } 
+]); -- 6. Apply index and drop index 
+db.teacher.createIndex({ department: 1 }); -- to drop: 
+db.teacher.dropIndex("department_1"); 
+Chit 17 — MySQL Employee & Project queries 
+Assume tables Employee and Project (with columns as per chit). 
+1. Different locations: 
+SELECT DISTINCT city FROM Employee; 
+2. Maximum and minimum salary: 
+SELECT MAX(salary) AS max_sal, MIN(salary) AS min_sal FROM Employee; 
+3. Display employee content ascending by salary: 
+SELECT * FROM Employee ORDER BY salary ASC; 
+4. Names of employees who live in Nasik or Pune: 
+SELECT name FROM Employee WHERE city IN ('Nasik', 'Pune'); 
+5. Employees who do not get commission (assume commission column NULL or 0): 
+SELECT * FROM Employee WHERE commission IS NULL OR commission = 0; 
+6. Change city of Amit to Nashik: 
+UPDATE Employee SET city = 'Nashik' WHERE name = 'Amit'; 
+7. Info of employees whose name starts with 'A': 
+SELECT * FROM Employee WHERE name LIKE 'A%'; 
+8. Count of staff from Mumbai: 
+SELECT COUNT(*) FROM Employee WHERE city = 'Mumbai'; 
+9. Count of staff from each city: 
+SELECT city, COUNT(*) FROM Employee GROUP BY city; 
+10. Address from where employees belong as well as where projects are going on: 
+Assuming Project has city: 
+SELECT DISTINCT e.city AS employee_city, p.city AS project_city 
+FROM Employee e CROSS JOIN Project p; -- or join on some relation if exists 
+11. City-wise minimum salary: 
+SELECT city, MIN(salary) FROM Employee GROUP BY city; 
+12. City-wise maximum salary having maximum salary > 26000: 
+SELECT city, MAX(salary) AS max_sal 
+FROM Employee 
+GROUP BY city 
+HAVING MAX(salary) > 26000; 
+13. Delete employee who has salary > 30,000: 
+DELETE FROM Employee WHERE salary > 30000; 
+Chit 18 — MongoDB city collection MapReduce tasks 
+Input doc: 
+{ city:"pune", type:"urban", state:"MH", population:5600000 } 
+MapReduce examples: 
+Statewise population: 
+var mapState = function() { emit(this.state, this.population); }; 
+var reduceSum = function(key, values) { return Array.sum(values); }; 
+db.city.mapReduce(mapState, reduceSum, { out: "state_population" }); 
+db.state_population.find(); 
+Citywise population: 
+var mapCity = function() { emit(this.city, this.population); }; 
+db.city.mapReduce(mapCity, reduceSum, { out: "city_population" }); 
+db.city_population.find(); 
+Typewise population: 
+var mapType = function() { emit(this.type, this.population); }; 
+db.city.mapReduce(mapType, reduceSum, { out: "type_population" }); 
+db.type_population.find(); 
+(Alternatively use aggregation pipeline with $group.) 
+Chit 19 — MySQL emp table with constraints, add column, index, view 
+1. Create table with constraints and sequence starting with 101 (Oracle) or 
+AUTO_INCREMENT in MySQL. 
+MySQL: 
+CREATE TABLE emp ( 
+Eno INT PRIMARY KEY AUTO_INCREMENT, 
+Ename VARCHAR(50) NOT NULL, 
+Address VARCHAR(100) DEFAULT 'Nashik', 
+Joindate DATE, 
+Salary DECIMAL(12,2) 
+); -- If you need to start AUTO_INCREMENT at 101: 
+ALTER TABLE emp AUTO_INCREMENT = 101; 
+-- Add column Post 
+ALTER TABLE emp ADD COLUMN Post VARCHAR(50); -- Insert sample data 
+INSERT INTO emp (Ename, Address, Joindate, Salary, Post) VALUES ('Sachin', 'Mumbai', 
+'2020-01-01', 30000, 'Manager'); -- Create index on Ename 
+CREATE INDEX idx_ename ON emp(Ename); -- Create view to show Ename and Salary 
+CREATE VIEW vw_emp_name_salary AS SELECT Ename, Salary FROM emp; 
+(For Oracle, use CREATE SEQUENCE starting at 101; use trigger to populate Eno.) 
+Chit 20 — MongoDB Indexing + Aggregation (Student collection) 
+Indexing: 
+db.students.createIndex({ Rollno: 1 }); -- single index 
+db.students.createIndex({ subject: 1, marks: -1 }); -- compound index 
+db.students.createIndex({ name: 1 }, { unique: true }); -- unique 
+db.students.getIndexes(); 
+db.students.dropIndex("subject_1_marks_-1"); -- example drop 
+Aggregation for provided data: -- Max marks of each subject 
+db.students.aggregate([ 
+{ $group: { _id: "$subject", maxMarks: { $max: "$marks" } } } 
+]); -- Min marks of each subject 
+db.students.aggregate([{ $group: { _id: "$subject", minMarks: { $min: "$marks" } } }]); -- Sum marks 
+db.students.aggregate([{ $group: { _id: "$subject", sumMarks: { $sum: "$marks" } } }]); -- Avg marks 
+db.students.aggregate([{ $group: { _id: "$subject", avgMarks: { $avg: "$marks" } } }]); -- First record each subject (by natural order) 
+db.students.aggregate([ 
+{ $sort: { _id: 1 } }, // if want deterministic order adjust 
+{ $group: { _id: "$subject", firstRecord: { $first: "$$ROOT" } } } 
+]); -- Last record each subject 
+db.students.aggregate([ 
+{ $sort: { _id: 1 } }, 
+{ $group: { _id: "$subject", lastRecord: { $last: "$$ROOT" } } } 
+]); -- Count records of each subject 
+db.students.aggregate([{ $group: { _id: "$subject", count: { $sum: 1 } } }]); 
+Chit 21 — MongoDB orderinfo advanced operations 
+Given orderinfo documents. 
+i. Add Age field to all documents: 
+db.orderinfo.updateMany({}, { $set: { Age: null } }); -- or set specific ages 
+ii. Create complex index and drop duplicates (Mongo doesn't allow duplicates for unique 
+indexes; to drop duplicates you must handle manually): -- create compound index 
+db.orderinfo.createIndex({ cust_id: 1, status: 1, price: 1 }); -- to enforce uniqueness (careful, must ensure no duplicate existing docs) 
+db.orderinfo.createIndex({ cust_id: 1, status: 1 }, { unique: true }); -- if duplicates exist, remove duplicates first programmatically, then create unique index 
+iii. Average price grouped by status: 
+db.orderinfo.aggregate([ 
+{ $group: { _id: "$status", avgPrice: { $avg: "$price" } } } 
+]) 
+iv. Change customer name whose status is 'B': 
+db.orderinfo.updateMany({ status: 'B' }, { $set: { cust_name: 'NewName' } }); 
+Chit 22 — MongoDB orderinfo operations 
+i. Customers with price between 250 and 450 (display names): 
+db.orderinfo.find({ price: { $gte: 250, $lte: 450 } }, { cust_name: 1, _id: 0 }); 
+ii. Increment/decrement price for specified cust_id: 
+db.orderinfo.updateOne({ cust_id: 123 }, { $inc: { price: 10 } }); 
+db.orderinfo.updateOne({ cust_id: 124 }, { $inc: { price: -5 } }); 
+iii. Remove a field (e.g., remove Age): 
+db.orderinfo.updateMany({}, { $unset: { Age: "" } }); 
+iv. Find name of customer whose status is either A or price is 250 or both: 
+db.orderinfo.find({ $or: [ { status: 'A' }, { price: 250 } ] }, { cust_name: 1, _id: 0 }); 
+Chit 23 — MySQL + Java (Two-tier) employee table operations 
+i–v MySQL statements (creation, insert, retrieve, update, delete) — basic examples: 
+CREATE TABLE Employee ( 
+SSN INT PRIMARY KEY, 
+Ename VARCHAR(50), 
+state VARCHAR(50), 
+salary DECIMAL(12,2) 
+); 
+INSERT INTO Employee(SSN, Ename, state, salary) VALUES (1, 'Amit', 'MH', 25000); -- Retrieve by SSN 
+SELECT * FROM Employee WHERE SSN = 1; -- Update employee state from 'MH' to 'TN' 
+UPDATE Employee SET state = 'TN' WHERE state = 'MH'; -- Delete employees from 'Gujrat' 
+DELETE FROM Employee WHERE state = 'Gujrat'; 
+Java JDBC code skeleton to perform these operations — use java.sql.*: 
+Connection conn = 
+DriverManager.getConnection("jdbc:mysql://localhost:3306/yourdb","user","pwd"); 
+PreparedStatement pst; 
+// Insert 
+pst = conn.prepareStatement("INSERT INTO Employee (SSN,Ename,state,salary) VALUES 
+(?,?,?,?)"); 
+pst.setInt(1, 2); pst.setString(2,"Ravi"); pst.setString(3,"MH"); pst.setDouble(4, 20000); 
+pst.executeUpdate(); 
+// Select by SSN 
+pst = conn.prepareStatement("SELECT * FROM Employee WHERE SSN=?"); 
+pst.setInt(1, 2); 
+ResultSet rs = pst.executeQuery(); 
+while(rs.next()) { 
+System.out.println(rs.getString("Ename")); 
+} 
+// Update 
+pst = conn.prepareStatement("UPDATE Employee SET state='TN' WHERE state='MH'"); 
+pst.executeUpdate(); 
+// Delete 
+pst = conn.prepareStatement("DELETE FROM Employee WHERE state='Gujrat'"); 
+pst.executeUpdate(); 
+Chit 24 — MySQL multiple-table operations 
+i. Modify company ABC now in Pune: 
+UPDATE Company SET city = 'Pune' WHERE cname = 'ABC'; 
+ii. Increase managers of Mbank 10% else 3% if salary > 20000: 
+Assume Manager table and works or employees table with company association; using 
+works: -- give 10% raise to all managers of Mbank where salary <= 20000, otherwise 3% 
+UPDATE Manager m 
+JOIN Company c ON c.c_id = <company id for Mbank> -- or use c.cname='Mbank' 
+SET m.salary = CASE WHEN m.salary > 20000 THEN m.salary * 1.03 ELSE m.salary * 1.10 END 
+WHERE c.cname = 'Mbank' AND m.mgr_id IN ( -- logic to select managers of Mbank; depends on schema 
+); 
+(Adjust with actual schema to join correctly.) 
+iii. Names of all employees who work in ‘Bosch’ in Pune: 
+SELECT w.ename 
+FROM works w 
+JOIN Company c ON w.c_id = c.c_id 
+WHERE c.cname = 'Bosch' AND c.city = 'Pune'; 
+iv. Delete records in works for employees of SBC company with salary > 50000: 
+DELETE w FROM works w 
+JOIN Company c ON w.c_id = c.c_id 
+WHERE c.cname = 'SBC' AND w.sal > 50000; 
+Chit 25 — MySQL duty allocation queries 
+Given Empl, Position, Duty-alloc. 
+i. Duty allocation details for e_no = 123 first shift in April 2003: 
+SELECT * FROM Duty_alloc 
+WHERE e_no = 123 AND shift = 'first' AND month = 'April' AND year = 2003; 
+ii. Employees whose pay_rate >= pay_rate of 'Sachin': 
+SELECT * FROM Empl 
+WHERE pay_rate >= (SELECT pay_rate FROM Empl WHERE e_name = 'Sachin' LIMIT 1); 
+iii. Create view displaying min, max, avg salary for all posts: 
+CREATE VIEW vw_post_salary AS 
+SELECT p.post, MIN(e.pay_rate) AS min_pay, MAX(e.pay_rate) AS max_pay, AVG(e.pay_rate) 
+AS avg_pay 
+FROM Empl e JOIN Position p ON e.post = p.post 
+GROUP BY p.post; 
+iv. Count of different employees on each shift having post ‘manager’: 
+SELECT d.shift, COUNT(DISTINCT d.e_no) AS emp_count 
+FROM Duty_alloc d 
+JOIN Empl e ON d.e_no = e.e_no 
+WHERE e.post = 'manager' 
+GROUP BY d.shift; 
+Excellent question     
+— I’ll show you exactly how to run each type (MySQL, PL/SQL, 
+MongoDB, Java + MongoDB/JDBC) on your terminal or command prompt. 
+You don’t need any IDE — everything can be done from terminal if your database tools are 
+installed. 
+1. MySQL Chits (SQL queries, joins, views, triggers, etc.) 
+Step 1 — Open MySQL terminal 
+Open terminal (cmd, PowerShell, or Linux terminal) and type: 
+mysql -u root -p 
+Enter your MySQL root password. 
+You’ll now see the MySQL prompt: 
+mysql> 
+Step 2 — Create or select your database 
+CREATE DATABASE labchits; 
+USE labchits; 
+Step 3 — Paste and run queries 
+You can directly paste any SQL query from the chits, e.g.: 
+CREATE TABLE Customer( 
+C_id INT PRIMARY KEY, 
+Cname VARCHAR(50), 
+city VARCHAR(50) 
+); 
+CREATE TABLE Account( 
+Acc_id INT PRIMARY KEY, 
+C_id INT, 
+Acc_Type VARCHAR(20), 
+amount DECIMAL(12,2), 
+FOREIGN KEY (C_id) REFERENCES Customer(C_id) 
+); 
+Then insert data and run: 
+SELECT * FROM Customer; 
+Each statement ends with a semicolon (;), then press Enter. 
+Step 4 — Run a .sql file directly 
+If you saved your SQL code to a file, e.g. chit1.sql, you can run: 
+mysql -u root -p labchits < chit1.sql 
+That executes the entire script. 
+2. PL/SQL Chits (Oracle Database) 
+PL/SQL (the ones with DECLARE, BEGIN, EXCEPTION) run in Oracle SQL*Plus or Oracle SQL 
+Developer terminal. 
+Step 1 — Open SQL*Plus 
+In terminal: 
+sqlplus system/password 
+(Use your Oracle username/password.) 
+Step 2 — Select a database (if needed) 
+CONNECT system/password@XE 
+Step 3 — Paste the PL/SQL block 
+Example: 
+SET SERVEROUTPUT ON; 
+DECLARE 
+v_roll NUMBER := 1; 
+BEGIN 
+DBMS_OUTPUT.PUT_LINE('Hello PL/SQL!'); 
+END; 
+/ 
+The / (forward slash) on a new line executes the block. 
+    Step 4 — View output 
+The DBMS_OUTPUT.PUT_LINE prints text in the terminal. 
+ 
+   3. MongoDB Chits (all db.collection commands, mapReduce, aggregation) 
+    Step 1 — Open Mongo Shell 
+In terminal: 
+mongosh 
+You’ll see: 
+test> 
+    Step 2 — Use (or create) your DB 
+use labchits 
+    Step 3 — Paste commands 
+Example: 
+db.orderinfo.insertOne({ cust_id:1, cust_name:"Amit", status:"A", price:250 }) 
+db.orderinfo.find() 
+db.orderinfo.aggregate([{ $group:{ _id:"$status", avgPrice:{ $avg:"$price" } } }]) 
+    Step 4 — Exit 
+exit 
+          Tip: You can also save all commands in a .js file and run: 
+mongosh labchits chit9.js 
+ 
+   4. Java + MySQL or Java + MongoDB (JDBC or Mongo driver) 
+You can compile and run them from command line using javac and java commands. 
+    Step 1 — Save code 
+Example file: MongoExample.java 
+Step 2 — Compile 
+You’ll need the MongoDB driver .jar (like mongodb-driver-sync.jar). 
+Example: 
+javac -cp ".;mongodb-driver-sync-4.11.0.jar" MongoExample.java 
+Step 3 — Run 
+java -cp ".;mongodb-driver-sync-4.11.0.jar" MongoExample 
+Same process for JDBC: 
+javac -cp ".;mysql-connector-j-9.0.0.jar" JdbcExample.java 
+java -cp ".;mysql-connector-j-9.0.0.jar" JdbcExample 
+Summary Table 
+Type 
+MySQL 
+Oracle PL/SQL 
+MongoDB 
+Java (JDBC / 
+MongoDB) 
+Run Command 
+mysql -u root -p 
+sqlplus 
+system/password 
+mongosh 
+javac + java 
+File 
+Extension 
+.sql 
+.sql 
+.js 
+.java 
+Terminal Example 
+mysql labchits < chit1.sql 
+Paste block then / 
+mongosh labchits chit9.js 
+java -cp ".;jarname.jar" 
+FileName 
+Would you like me to make a ready-to-run folder with all .sql + .js + .java files and one-step 
+run instructions (so you can just paste or execute)? 
+I can prepare that for you instantly. 

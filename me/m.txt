@@ -1,0 +1,168 @@
+// CHIT 9
+use testdb;
+db.orderinfo.drop();
+db.createCollection("orderinfo");
+db.orderinfo.insertMany([
+  { cust_id: 123, cust_name: "Amit", status: "A", price: 250 },
+  { cust_id: 124, cust_name: "Neha", status: "B", price: 500 },
+  { cust_id: 125, cust_name: "Raj", status: "A", price: 1200 },
+  { cust_id: 126, cust_name: "Kiran", status: "A", price: 700 }
+]);
+db.orderinfo.aggregate([
+  { $match: { status: "A" } },
+  { $group: { _id: "$status", avgPrice: { $avg: "$price" }, totalOrders: { $sum: 1 } } }
+]);
+db.orderinfo.find({ price: { $gte: 100, $lte: 1000 } }, { status: 1, price: 1 });
+db.orderinfo.createIndex({ cust_id: 1 });
+
+// CHIT 10
+use institute;
+db.students.drop();
+db.createCollection("students");
+db.students.insertMany([
+  { roll: 1, name: "Yash", branch: "CSE", marks: 89 },
+  { roll: 2, name: "Ananya", branch: "IT", marks: 91 },
+  { roll: 3, name: "Ravi", branch: "ENTC", marks: 77 }
+]);
+db.students.find();
+db.students.updateOne({ roll: 2 }, { $set: { marks: 95 } });
+db.students.deleteOne({ roll: 3 });
+db.students.insertOne({ roll: 4, name: "Meera", branch: "Civil", marks: 88 });
+db.students.find();
+
+// CHIT 13
+use moviedb;
+db.movies.drop();
+db.createCollection("movies");
+db.movies.insertMany([
+  { name: "Project Alpha", type: "Action", budget: 1000000, producer: { name: "Producer1", address: "PUNE" } },
+  { name: "Deep Space", type: "Sci-Fi", budget: 500000, producer: { name: "Producer2", address: "DELHI" } },
+  { name: "Silent Hills", type: "Horror", budget: 300000, producer: { name: "Producer3", address: "MUMBAI" } }
+]);
+db.movies.find({ budget: { $gt: 400000 } }, { name: 1 });
+db.movies.find({ "producer.address": "PUNE" }, { "producer.name": 1, name: 1 });
+db.movies.updateMany({ type: "Action" }, { $set: { type: "Thriller" } });
+db.movies.find({ "producer.name": "Producer1" }, { "producer": 1, name: 1 });
+
+// CHIT 14
+use school;
+db.teachers.drop();
+db.department.drop();
+db.students.drop();
+db.teachers.insertMany([
+  { Tname: "Suresh", dno: 2, Experience: 5, Salary: 12000, Date_of_Joining: new Date("2020-01-01") },
+  { Tname: "Meena", dno: 2, Experience: 8, Salary: 15000, Date_of_Joining: new Date("2018-05-10") }
+]);
+db.department.insertMany([{ Dno: 1, Dname: "CSE" }, { Dno: 2, Dname: "ECE" }]);
+db.students.insertMany([
+  { Sname: "Ankit", Roll_No: 1, Class: "FE" },
+  { Sname: "Pooja", Roll_No: 2, Class: "SE" },
+  { Sname: "Ravi", Roll_No: 3, Class: "FE" }
+]);
+db.teachers.find({ dno: 2, Salary: { $gte: 10000 } });
+db.students.find({ $or: [{ Roll_No: 2 }, { Sname: "Pooja" }] });
+db.students.updateOne({ Roll_No: 3 }, { $set: { Class: "TE" } });
+db.students.deleteMany({ Class: "FE" });
+db.students.createIndex({ Roll_No: 1 });
+
+// CHIT 15
+use institute;
+db.students.drop();
+db.createCollection("students");
+db.students.insertMany([
+  { RollNo: 1, StudentName: "Aman", Age: 16, Branch: "Computer", Address: { City: "Pune", State: "MH" }, Hobbies: ["cricket", "coding"] },
+  { RollNo: 2, StudentName: "Anita", Age: 17, Branch: "IT", Address: { City: "Mumbai", State: "MH" }, Hobbies: ["music"] },
+  { RollNo: 3, StudentName: "Ravi", Age: 15, Branch: "Computer", Address: { City: "Pune", State: "MH" }, Hobbies: ["reading"] },
+  { RollNo: 4, StudentName: "Geeta", Age: 18, Branch: "Electronics", Address: { City: "Nashik", State: "MH" }, Hobbies: ["dance"] },
+  { RollNo: 5, StudentName: "Pran", Age: 16, Branch: "Computer", Address: { City: "Pune", State: "MH" }, Hobbies: ["gaming"] }
+]);
+db.students.find();
+db.students.find({ Age: { $gt: 15 } });
+db.students.find().sort({ StudentName: 1 });
+db.students.updateOne({ RollNo: 3 }, { $set: { Branch: "AI" } });
+db.students.deleteOne({ RollNo: 1 });
+db.students.find({ StudentName: { $regex: "^A" } });
+db.students.countDocuments();
+db.students.find().limit(3);
+db.students.find({ "Address.City": "Pune" }, { StudentName: 1 });
+db.students.find({}, { StudentName: 1, _id: 0 });
+
+// CHIT 16
+use department;
+db.teacher.drop();
+db.createCollection("teacher");
+db.teacher.insertMany([
+  { name: "Amit", department: "CSE", experience: 5, salary: 50000 },
+  { name: "Ravi", department: "CSE", experience: 7, salary: 60000 },
+  { name: "Kiran", department: "ECE", experience: 4, salary: 40000 }
+]);
+db.teacher.aggregate([{ $group: { _id: "$department", avgSalary: { $avg: "$salary" } } }]);
+db.teacher.aggregate([{ $group: { _id: "$department", count: { $sum: 1 } } }]);
+db.teacher.aggregate([{ $group: { _id: "$department", minSalary: { $min: "$salary" } } }]);
+db.teacher.createIndex({ department: 1 });
+
+// CHIT 18
+use citydb;
+db.city.drop();
+db.createCollection("city");
+db.city.insertMany([
+  { city: "Pune", type: "urban", state: "MH", population: 5600000 },
+  { city: "Mumbai", type: "urban", state: "MH", population: 20000000 },
+  { city: "Nashik", type: "urban", state: "MH", population: 200000 }
+]);
+var mapState = function () { emit(this.state, this.population); };
+var reduceSum = function (key, values) { return Array.sum(values); };
+db.city.mapReduce(mapState, reduceSum, { out: "statePopulation" });
+db.statePopulation.find();
+var mapCity = function () { emit(this.city, this.population); };
+db.city.mapReduce(mapCity, reduceSum, { out: "cityPopulation" });
+db.cityPopulation.find();
+var mapType = function () { emit(this.type, this.population); };
+db.city.mapReduce(mapType, reduceSum, { out: "typePopulation" });
+db.typePopulation.find();
+
+// CHIT 20
+use idxdb;
+db.students.drop();
+db.createCollection("students");
+db.students.insertMany([
+  { Rollno: 1, name: "Navin", subject: "DBMS", marks: 78 },
+  { Rollno: 2, name: "Anusha", subject: "OS", marks: 75 },
+  { Rollno: 3, name: "Ravi", subject: "TOC", marks: 69 },
+  { Rollno: 4, name: "Veena", subject: "TOC", marks: 70 },
+  { Rollno: 5, name: "Pravin", subject: "OS", marks: 80 },
+  { Rollno: 6, name: "Reena", subject: "DBMS", marks: 50 },
+  { Rollno: 7, name: "Geeta", subject: "CN", marks: 90 },
+  { Rollno: 8, name: "Akash", subject: "CN", marks: 85 }
+]);
+db.students.createIndex({ Rollno: 1 });
+db.students.createIndex({ subject: 1, marks: -1 }, { name: "compound_idx" });
+db.students.aggregate([{ $group: { _id: "$subject", maxMarks: { $max: "$marks" } } }]);
+db.students.aggregate([{ $group: { _id: "$subject", avgMarks: { $avg: "$marks" } } }]);
+db.students.aggregate([{ $group: { _id: "$subject", count: { $sum: 1 } } }]);
+
+// CHIT 21
+use testdb;
+db.orderinfo.drop();
+db.orderinfo.insertMany([
+  { cust_id: 123, cust_name: "Amit", status: "A", price: 250 },
+  { cust_id: 124, cust_name: "Ravi", status: "B", price: 300 },
+  { cust_id: 125, cust_name: "Neha", status: "A", price: 400 }
+]);
+db.orderinfo.updateMany({}, { $set: { Age: 30 } });
+db.orderinfo.createIndex({ cust_id: 1, status: 1, price: 1 });
+db.orderinfo.aggregate([{ $group: { _id: "$status", avgPrice: { $avg: "$price" } } }]);
+db.orderinfo.updateMany({ status: "B" }, { $set: { cust_name: "Updated" } });
+
+// CHIT 22
+use testdb;
+db.orderinfo.drop();
+db.orderinfo.insertMany([
+  { cust_id: 123, cust_name: "Amit", status: "A", price: 250 },
+  { cust_id: 124, cust_name: "Neha", status: "B", price: 300 },
+  { cust_id: 125, cust_name: "Ravi", status: "A", price: 450 }
+]);
+db.orderinfo.find({ price: { $gte: 250, $lte: 450 } }, { cust_name: 1 });
+db.orderinfo.updateOne({ cust_id: 123 }, { $inc: { price: 10 } });
+db.orderinfo.updateOne({ cust_id: 124 }, { $inc: { price: -5 } });
+db.orderinfo.find({ $or: [{ status: "A" }, { price: 250 }] }, { cust_name: 1 });
